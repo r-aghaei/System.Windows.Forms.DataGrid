@@ -1,7 +1,7 @@
 namespace System.Windows.Forms
 {
-
     using System.Diagnostics;
+
     /// <summary>
     ///    <para>
     ///       Specifies the style of gridlines in a <see cref='System.Windows.Forms.DataGrid'/>.

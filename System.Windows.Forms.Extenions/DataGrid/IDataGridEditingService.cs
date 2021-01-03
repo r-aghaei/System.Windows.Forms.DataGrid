@@ -1,11 +1,8 @@
 namespace System.Windows.Forms
 {
-
     using System.Diagnostics;
-
     using System;
 
-    /// <internalonly/>
     /// <summary>
     ///    <para>The DataGrid exposes hooks to request editing commands
     ///       via this interface.</para>
