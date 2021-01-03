@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace System.Windows.Forms.Extenions
+namespace DataGridExample
 {
     static class Program
     {

@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{147F0512
 		Changes.txt = Changes.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridExample", "DataGridExample\DataGridExample.csproj", "{F038DA4F-73BB-46C8-AF37-338EF42BAF87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{479D84EC-FF43-4A8A-B8A2-3F379E3C5A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{479D84EC-FF43-4A8A-B8A2-3F379E3C5A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{479D84EC-FF43-4A8A-B8A2-3F379E3C5A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F038DA4F-73BB-46C8-AF37-338EF42BAF87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F038DA4F-73BB-46C8-AF37-338EF42BAF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F038DA4F-73BB-46C8-AF37-338EF42BAF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F038DA4F-73BB-46C8-AF37-338EF42BAF87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
