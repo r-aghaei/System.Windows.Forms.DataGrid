@@ -1,10 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="DataGridTextBox.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-namespace System.Windows.Forms{
+namespace System.Windows.Forms
+{
     using System.Runtime.Remoting;
     using System;
     using System.Security.Permissions;
@@ -14,11 +9,10 @@ namespace System.Windows.Forms{
     using Microsoft.Win32;
     using System.Runtime.InteropServices;
 
-    /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox"]/*' />
-    /// <devdoc>
+    /// <summary>
     /// <para>Represents a <see cref='System.Windows.Forms.TextBox'/> control that is hosted in a 
     /// <see cref='System.Windows.Forms.DataGridTextBoxColumn'/> .</para>
-    /// </devdoc>
+    /// </summary>
     [
     ComVisible(true),
     ClassInterface(ClassInterfaceType.AutoDispatch),
@@ -26,7 +20,8 @@ namespace System.Windows.Forms{
     DesignTimeVisible(false),
     DefaultProperty("GridEditName")
     ]
-    public class DataGridTextBox : TextBox {
+    public class DataGridTextBox : TextBox
+    {
 
         private bool isInEditOrNavigateMode = true;
 
@@ -34,25 +29,25 @@ namespace System.Windows.Forms{
         // takes place
         private DataGrid dataGrid;
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.DataGridTextBox"]/*' />
-        public DataGridTextBox() : base () { 
+        public DataGridTextBox() : base()
+        {
             TabStop = false;
         }
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.SetDataGrid"]/*' />
-        /// <devdoc>
+        /// <summary>
         /// <para>Sets the <see cref='System.Windows.Forms.DataGrid'/> to which this <see cref='System.Windows.Forms.TextBox'/> control belongs.</para>
-        /// </devdoc>
+        /// </summary>
         public void SetDataGrid(DataGrid parentGrid)
         {
             dataGrid = parentGrid;
         }
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.WndProc"]/*' />
-        [SecurityPermission(SecurityAction.LinkDemand, Flags=SecurityPermissionFlag.UnmanagedCode)]
-        protected override void WndProc(ref Message m) {
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        protected override void WndProc(ref Message m)
+        {
             // but what if we get a CtrlV?
             // what about deleting from the menu?
-            if (m.Msg == NativeMethods.WM_PASTE || m.Msg == NativeMethods.WM_CUT || m.Msg == NativeMethods.WM_CLEAR) {
+            if (m.Msg == NativeMethods.WM_PASTE || m.Msg == NativeMethods.WM_CUT || m.Msg == NativeMethods.WM_CLEAR)
+            {
                 IsInEditOrNavigateMode = false;
                 dataGrid.ColumnStartedEditing(Bounds);
             }
@@ -61,15 +56,14 @@ namespace System.Windows.Forms{
 
         }
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.OnMouseWheel"]/*' />
-        protected override void OnMouseWheel(MouseEventArgs e) {
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
             dataGrid.TextBoxOnMouseWheel(e);
         }
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.OnKeyPress"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
@@ -93,11 +87,10 @@ namespace System.Windows.Forms{
             dataGrid.ColumnStartedEditing(Bounds);
         }
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.ProcessKeyMessage"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        [SecurityPermission(SecurityAction.LinkDemand, Flags=SecurityPermissionFlag.UnmanagedCode)]
+        /// </summary>
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected internal override bool ProcessKeyMessage(ref Message m)
         {
             Keys key = (Keys)unchecked((int)(long)m.WParam);
@@ -114,7 +107,8 @@ namespace System.Windows.Forms{
                 return ProcessKeyPreview(ref m);
             }
 
-            if (m.Msg == NativeMethods.WM_CHAR) {
+            if (m.Msg == NativeMethods.WM_CHAR)
+            {
                 if (key == Keys.LineFeed)           // eat the LineFeed we get when the user presses Ctrl-Enter in a gridTextBox
                     return true;
                 return ProcessKeyEventArgs(ref m);
@@ -163,7 +157,7 @@ namespace System.Windows.Forms{
                     // send this character to the dataGrid
                     // else, process the KeyEvent
                     //
-                    if ( Text.IndexOf("\r\n") < 0 || SelectionStart + SelectionLength  < Text.IndexOf("\r\n"))
+                    if (Text.IndexOf("\r\n") < 0 || SelectionStart + SelectionLength < Text.IndexOf("\r\n"))
                         return ProcessKeyPreview(ref m);
                     return ProcessKeyEventArgs(ref m);
                 case Keys.Home:
@@ -191,23 +185,23 @@ namespace System.Windows.Forms{
                 case Keys.Space:
                     if (IsInEditOrNavigateMode && (Control.ModifierKeys & Keys.Shift) == Keys.Shift)
                     {
-                            // when we get a SHIFT-SPACEBAR message, disregard the WM_CHAR part of the message
-                            if (m.Msg == NativeMethods.WM_CHAR) return true;
+                        // when we get a SHIFT-SPACEBAR message, disregard the WM_CHAR part of the message
+                        if (m.Msg == NativeMethods.WM_CHAR) return true;
 
-                            // if the user pressed the SHIFT key at the same time with 
-                            // the space key, send the key message to the DataGrid
-                            return ProcessKeyPreview(ref m);
+                        // if the user pressed the SHIFT key at the same time with 
+                        // the space key, send the key message to the DataGrid
+                        return ProcessKeyPreview(ref m);
                     }
                     return ProcessKeyEventArgs(ref m);
                 case Keys.A:
                     if (IsInEditOrNavigateMode && (Control.ModifierKeys & Keys.Control) == Keys.Control)
                     {
-                            // when we get a Control-A message, disregard the WM_CHAR part of the message
-                            if (m.Msg == NativeMethods.WM_CHAR) return true;
+                        // when we get a Control-A message, disregard the WM_CHAR part of the message
+                        if (m.Msg == NativeMethods.WM_CHAR) return true;
 
-                            // if the user pressed the Control key at the same time with 
-                            // the space key, send the key message to the DataGrid
-                            return ProcessKeyPreview(ref m);
+                        // if the user pressed the Control key at the same time with 
+                        // the space key, send the key message to the DataGrid
+                        return ProcessKeyPreview(ref m);
                     }
                     return ProcessKeyEventArgs(ref m);
                 case Keys.F2:
@@ -217,13 +211,15 @@ namespace System.Windows.Forms{
                     SelectionStart = Text.Length;
                     return true;
                 case Keys.Delete:
-                    if (IsInEditOrNavigateMode) {
+                    if (IsInEditOrNavigateMode)
+                    {
                         // pass the delete to the parent, in our case, the DataGrid
                         // if the dataGrid used the key, then we aren't gonne
                         // use it anymore, else we are
                         if (ProcessKeyPreview(ref m))
                             return true;
-                        else {
+                        else
+                        {
                             // the edit control will use the 
                             // delete key: we are in Edit mode now:
                             IsInEditOrNavigateMode = false;
@@ -246,15 +242,17 @@ namespace System.Windows.Forms{
             }
         }
 
-        /// <include file='doc\DataGridTextBox.uex' path='docs/doc[@for="DataGridTextBox.IsInEditOrNavigateMode"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public bool IsInEditOrNavigateMode {
-            get {
+        /// </summary>
+        public bool IsInEditOrNavigateMode
+        {
+            get
+            {
                 return isInEditOrNavigateMode;
             }
-            set {
+            set
+            {
                 isInEditOrNavigateMode = value;
                 if (value)
                     SelectAll();

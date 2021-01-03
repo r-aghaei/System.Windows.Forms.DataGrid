@@ -1,38 +1,33 @@
-//------------------------------------------------------------------------------
-// <copyright file="DataGridRelationshipRow.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-namespace System.Windows.Forms {
+namespace System.Windows.Forms
+{
     using System.Runtime.Remoting;
 
     using System;
     using System.Runtime.InteropServices;
     using System.Security.Permissions;
-    
+
     using System.Windows.Forms;
     using System.ComponentModel;
     using System.Drawing;
-    
+
     using Microsoft.Win32;
     using System.Diagnostics;
     using System.Collections;
     using System.Globalization;
 
-    /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow"]/*' />
-    /// <devdoc>
+    /// <summary>
     ///      This class fully encapsulates the painting logic for a row
     ///      appearing in a DataGrid.
-    /// </devdoc>
-    internal class DataGridRelationshipRow : DataGridRow {
-        private const bool defaultOpen         = false;
-        private const int  expandoBoxWidth     = 14;
-        private const int  indentWidth         = 20;
+    /// </summary>
+    internal class DataGridRelationshipRow : DataGridRow
+    {
+        private const bool defaultOpen = false;
+        private const int expandoBoxWidth = 14;
+        private const int indentWidth = 20;
         // private const int  relationshipSpacing = 1;
-        private const int  triangleSize        = 5;
+        private const int triangleSize = 5;
 
-        private bool expanded         = defaultOpen;
+        private bool expanded = defaultOpen;
         // private bool hasRelationships = false;
         // private Font linkFont = null;
         // private new DataGrid dataGrid; // Currently used only to obtain a Graphics object for measuring text
@@ -47,7 +42,8 @@ namespace System.Windows.Forms {
         // private int          focusedTextWidth;
 
         public DataGridRelationshipRow(DataGrid dataGrid, DataGridTableStyle dgTable, int rowNumber)
-        : base(dataGrid, dgTable, rowNumber) {
+        : base(dataGrid, dgTable, rowNumber)
+        {
             // this.dataGrid = dataGrid;
             // linkFont = dataGrid.LinkFont;
             // relationshipHeight = dataGrid.LinkFontHeight + this.dgTable.relationshipSpacing;
@@ -57,7 +53,8 @@ namespace System.Windows.Forms {
             // }
         }
 
-        internal protected override int MinimumRowHeight(GridColumnStylesCollection cols) {
+        internal protected override int MinimumRowHeight(GridColumnStylesCollection cols)
+        {
             /*
             if (DataGrid != null && DataGrid.LinkFontHeight + this.dgTable.relationshipSpacing != relationshipHeight) {
                 relationshipRect = Rectangle.Empty;
@@ -68,7 +65,8 @@ namespace System.Windows.Forms {
             return base.MinimumRowHeight(cols) + (this.expanded ? GetRelationshipRect().Height : 0);
         }
 
-        internal protected override int MinimumRowHeight(DataGridTableStyle dgTable) {
+        internal protected override int MinimumRowHeight(DataGridTableStyle dgTable)
+        {
             /*
             if (DataGrid != null && DataGrid.LinkFontHeight + this.dgTable.relationshipSpacing != relationshipHeight) {
                 relationshipRect = Rectangle.Empty;
@@ -83,11 +81,14 @@ namespace System.Windows.Forms {
         // =        Properties
         // =------------------------------------------------------------------
 
-        public virtual bool Expanded {
-            get {
+        public virtual bool Expanded
+        {
+            get
+            {
                 return expanded;
             }
-            set {
+            set
+            {
                 if (expanded == value)
                     return;
                 if (expanded)
@@ -133,11 +134,14 @@ namespace System.Windows.Forms {
         }
 #endif //FALSE
 
-        private int FocusedRelation {
-            get {
+        private int FocusedRelation
+        {
+            get
+            {
                 return this.dgTable.FocusedRelation;
             }
-            set {
+            set
+            {
                 dgTable.FocusedRelation = value;
             }
         }
@@ -146,27 +150,32 @@ namespace System.Windows.Forms {
         // =        Methods
         // =------------------------------------------------------------------
 
-        private void Collapse() {
+        private void Collapse()
+        {
             Debug.Assert(this.dgTable.DataGrid.AllowNavigation, "how can the user collapse the relations if the grid does not allow navigation?");
-            if (expanded) {
+            if (expanded)
+            {
                 expanded = false;
                 // relationshipRect = Rectangle.Empty;
                 FocusedRelation = -1;
                 DataGrid.OnRowHeightChanged(this);
             }
         }
-        
-        protected override AccessibleObject CreateAccessibleObject() {
+
+        protected override AccessibleObject CreateAccessibleObject()
+        {
             return new DataGridRelationshipRowAccessibleObject(this);
         }
 
 
-        private void Expand() {
+        private void Expand()
+        {
             Debug.Assert(this.dgTable.DataGrid.AllowNavigation, "how can the user expand the relations if the grid does not allow navigation?");
             if (expanded == false
                 && DataGrid != null
                 && this.dgTable != null
-                && this.dgTable.RelationsList.Count > 0) {
+                && this.dgTable.RelationsList.Count > 0)
+            {
                 expanded = true;
                 FocusedRelation = -1;
 
@@ -175,15 +184,18 @@ namespace System.Windows.Forms {
             }
         }
 
-        public override int Height {
-            get {
+        public override int Height
+        {
+            get
+            {
                 int height = base.Height;
                 if (expanded)
                     return height + GetRelationshipRect().Height;
                 else
                     return height;
             }
-            set {
+            set
+            {
                 // we should use the RelationshipRect only when the row is expanded
                 if (expanded)
                     base.Height = value - GetRelationshipRect().Height;
@@ -194,7 +206,8 @@ namespace System.Windows.Forms {
 
         // so the edit box will not paint under the 
         // grid line of the row
-        public override Rectangle GetCellBounds(int col) {
+        public override Rectangle GetCellBounds(int col)
+        {
             Rectangle cellBounds = base.GetCellBounds(col);
             // decrement base.Height by 1, so the edit box will not 
             // paint over the bottom line.
@@ -202,13 +215,13 @@ namespace System.Windows.Forms {
             return cellBounds;
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.GetOutlineRect"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Given an origin, this procedure returns
         ///      a rectangle that describes the location of an outline box.
-        /// </devdoc>
+        /// </summary>
         /// <internalonly/>
-        private Rectangle GetOutlineRect(int xOrigin, int yOrigin) {
+        private Rectangle GetOutlineRect(int xOrigin, int yOrigin)
+        {
             Rectangle outline = new Rectangle(xOrigin + 2,
                                               yOrigin + 2,
                                               9,
@@ -216,15 +229,18 @@ namespace System.Windows.Forms {
             return outline;
         }
 
-        public override Rectangle GetNonScrollableArea() {
-            if (expanded) {
+        public override Rectangle GetNonScrollableArea()
+        {
+            if (expanded)
+            {
                 return GetRelationshipRect();
             }
             else
                 return Rectangle.Empty;
         }
 
-        private Rectangle GetRelationshipRect() {
+        private Rectangle GetRelationshipRect()
+        {
             Debug.Assert(this.expanded, "we should need this rectangle only when the row is expanded");
             Rectangle ret = this.dgTable.RelationshipRect;
             ret.Y = base.Height - this.dgTable.BorderWidth;
@@ -265,10 +281,12 @@ namespace System.Windows.Forms {
 
 #endif// FALSE
 
-        private Rectangle GetRelationshipRectWithMirroring() {
+        private Rectangle GetRelationshipRectWithMirroring()
+        {
             Rectangle relRect = GetRelationshipRect();
             bool rowHeadersVisible = this.dgTable.IsDefault ? this.DataGrid.RowHeadersVisible : this.dgTable.RowHeadersVisible;
-            if (rowHeadersVisible) {
+            if (rowHeadersVisible)
+            {
                 int rowHeaderWidth = this.dgTable.IsDefault ? this.DataGrid.RowHeaderWidth : this.dgTable.RowHeaderWidth;
                 relRect.X += DataGrid.GetRowHeaderRect().X + rowHeaderWidth;
             }
@@ -276,38 +294,45 @@ namespace System.Windows.Forms {
             return relRect;
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.OnMouseDown"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Called by the DataGrid when a click occurs in the row's client
         ///      area.  The coordinates are normalized to the rectangle's top
         ///      left point.
-        /// </devdoc>
-        private bool PointOverPlusMinusGlyph(int x, int y, Rectangle rowHeaders, bool alignToRight) {
+        /// </summary>
+        private bool PointOverPlusMinusGlyph(int x, int y, Rectangle rowHeaders, bool alignToRight)
+        {
             if (dgTable == null || dgTable.DataGrid == null || !dgTable.DataGrid.AllowNavigation)
                 return false;
             Rectangle insideRowHeaders = rowHeaders;
-            if (!this.DataGrid.FlatMode) {
-                insideRowHeaders.Inflate(-1,-1);
+            if (!this.DataGrid.FlatMode)
+            {
+                insideRowHeaders.Inflate(-1, -1);
             }
 
             Rectangle outline = GetOutlineRect(insideRowHeaders.Right - expandoBoxWidth, 0);
 
             outline.X = MirrorRectangle(outline.X, outline.Width, insideRowHeaders, alignToRight);
 
-            return outline.Contains(x,y);
+            return outline.Contains(x, y);
         }
 
-        public override bool OnMouseDown(int x, int y, Rectangle rowHeaders, bool alignToRight) {
+        public override bool OnMouseDown(int x, int y, Rectangle rowHeaders, bool alignToRight)
+        {
             bool rowHeadersVisible = this.dgTable.IsDefault ? this.DataGrid.RowHeadersVisible : this.dgTable.RowHeadersVisible;
-            if (rowHeadersVisible) {
-                if (PointOverPlusMinusGlyph(x,y,rowHeaders, alignToRight)) {
-                    if (this.dgTable.RelationsList.Count == 0) {
+            if (rowHeadersVisible)
+            {
+                if (PointOverPlusMinusGlyph(x, y, rowHeaders, alignToRight))
+                {
+                    if (this.dgTable.RelationsList.Count == 0)
+                    {
                         return false;
                     }
-                    else if (expanded) {
+                    else if (expanded)
+                    {
                         Collapse();
                     }
-                    else {
+                    else
+                    {
                         Expand();
                     }
                     DataGrid.OnNodeClick(EventArgs.Empty);
@@ -321,9 +346,11 @@ namespace System.Windows.Forms {
             // hit test for relationships
             Rectangle relRect = GetRelationshipRectWithMirroring();
 
-            if (relRect.Contains(x, y)) {
+            if (relRect.Contains(x, y))
+            {
                 int r = RelationFromY(y);
-                if (r != -1) {
+                if (r != -1)
+                {
                     // first, reset the FocusedRelation
                     FocusedRelation = -1;
                     DataGrid.NavigateTo(((string)this.dgTable.RelationsList[r]), this, true);
@@ -335,13 +362,15 @@ namespace System.Windows.Forms {
             return base.OnMouseDown(x, y, rowHeaders, alignToRight);
         }
 
-        public override bool OnMouseMove(int x, int y, Rectangle rowHeaders, bool alignToRight) {
+        public override bool OnMouseMove(int x, int y, Rectangle rowHeaders, bool alignToRight)
+        {
             if (!expanded)
                 return false;
 
             Rectangle relRect = GetRelationshipRectWithMirroring();
 
-            if (relRect.Contains(x, y)) {
+            if (relRect.Contains(x, y))
+            {
                 this.DataGrid.Cursor = Cursors.Hand;
                 return true;
             }
@@ -352,7 +381,8 @@ namespace System.Windows.Forms {
 
         // this function will not invalidate all of the 
         // row
-        public override void OnMouseLeft(Rectangle rowHeaders, bool alignToRight) {
+        public override void OnMouseLeft(Rectangle rowHeaders, bool alignToRight)
+        {
             if (!expanded)
                 return;
 
@@ -360,33 +390,37 @@ namespace System.Windows.Forms {
             relRect.X += rowHeaders.X + this.dgTable.RowHeaderWidth;
             relRect.X = MirrorRelationshipRectangle(relRect, rowHeaders, alignToRight);
 
-            if (FocusedRelation != -1) {
+            if (FocusedRelation != -1)
+            {
                 InvalidateRowRect(relRect);
                 FocusedRelation = -1;
             }
         }
 
-        public override void OnMouseLeft() {
+        public override void OnMouseLeft()
+        {
             if (!expanded)
                 return;
 
-            if (FocusedRelation != -1) {
+            if (FocusedRelation != -1)
+            {
                 InvalidateRow();
                 FocusedRelation = -1;
             }
             base.OnMouseLeft();
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.OnKeyPress"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Called by the DataGrid when a keypress occurs on a row with "focus."
-        /// </devdoc>
-        public override bool OnKeyPress(Keys keyData) {
+        /// </summary>
+        public override bool OnKeyPress(Keys keyData)
+        {
             // ignore the shift key if it is not paired w/ the TAB key
             if ((keyData & Keys.Modifiers) == Keys.Shift && (keyData & Keys.KeyCode) != Keys.Tab)
                 return false;
 
-            switch (keyData & Keys.KeyCode) {
+            switch (keyData & Keys.KeyCode)
+            {
                 case Keys.F5:
                     if (dgTable == null || dgTable.DataGrid == null || !dgTable.DataGrid.AllowNavigation)
                         return false;
@@ -405,7 +439,8 @@ namespace System.Windows.Forms {
                     else
                         return base.OnKeyPress(keyData);
                 case Keys.Enter:
-                    if (FocusedRelation != -1) {
+                    if (FocusedRelation != -1)
+                    {
                         // somebody set the relation number up already
                         // navigate to the relation
                         DataGrid.NavigateTo(((string)this.dgTable.RelationsList[FocusedRelation]), this, true);
@@ -428,7 +463,8 @@ namespace System.Windows.Forms {
 
         // will reset the FocusedRelation and will invalidate the 
         // rectangle so that the linkFont is no longer shown
-        internal override void LoseChildFocus(Rectangle rowHeaders, bool alignToRight) {
+        internal override void LoseChildFocus(Rectangle rowHeaders, bool alignToRight)
+        {
             // we only invalidate stuff if the row is expanded.
             if (FocusedRelation == -1 || !expanded)
                 return;
@@ -450,7 +486,8 @@ namespace System.Windows.Forms {
         // it passes it to the row. If the dataRelationshipRow can become focused,
         // then it eats the TAB key, otherwise it will give it back to the dataGrid.
         //
-        internal override bool ProcessTabKey(Keys keyData, Rectangle rowHeaders, bool alignToRight) {
+        internal override bool ProcessTabKey(Keys keyData, Rectangle rowHeaders, bool alignToRight)
+        {
             Debug.Assert((keyData & Keys.Control) != Keys.Control, "the DataGridRelationshipRow only handles TAB and TAB-SHIFT");
             Debug.Assert((keyData & Keys.Alt) != Keys.Alt, "the DataGridRelationshipRow only handles TAB and TAB-SHIFT");
 
@@ -463,8 +500,10 @@ namespace System.Windows.Forms {
             if (!expanded)
                 Expand();
 
-            if ((keyData & Keys.Shift) == Keys.Shift) {
-                if (FocusedRelation == 0) {
+            if ((keyData & Keys.Shift) == Keys.Shift)
+            {
+                if (FocusedRelation == 0)
+                {
                     // if user hits TAB-SHIFT and the focus was on the first relationship then
                     // reset FocusedRelation and let the dataGrid use the key
                     //
@@ -485,11 +524,13 @@ namespace System.Windows.Forms {
                     // set of relationships
                     FocusedRelation = this.dgTable.RelationsList.Count - 1;
                 else
-                    FocusedRelation --;
+                    FocusedRelation--;
                 return true;
             }
-            else {
-                if (FocusedRelation == this.dgTable.RelationsList.Count - 1) {
+            else
+            {
+                if (FocusedRelation == this.dgTable.RelationsList.Count - 1)
+                {
                     // if the user hits TAB and the focus was on the last relationship then
                     // reset FocusedRelation and let the dataGrid use the key
                     //
@@ -505,16 +546,16 @@ namespace System.Windows.Forms {
                 relRect.X = MirrorRelationshipRectangle(relRect, rowHeaders, alignToRight);
                 InvalidateRowRect(relRect);
 
-                FocusedRelation ++;
+                FocusedRelation++;
                 return true;
             }
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.Paint"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Paints the row.
-        /// </devdoc>
-        public override int Paint(Graphics g, Rectangle bounds, Rectangle trueRowBounds, int firstVisibleColumn, int numVisibleColumns) {
+        /// </summary>
+        public override int Paint(Graphics g, Rectangle bounds, Rectangle trueRowBounds, int firstVisibleColumn, int numVisibleColumns)
+        {
             return Paint(g, bounds, trueRowBounds, firstVisibleColumn, numVisibleColumns, false);
         }
 
@@ -523,7 +564,8 @@ namespace System.Windows.Forms {
                                   Rectangle trueRowBounds,   // real row bounds.
                                   int firstVisibleColumn,
                                   int numVisibleColumns,
-                                  bool alignToRight) {
+                                  bool alignToRight)
+        {
             if (CompModSwitches.DGRelationShpRowPaint.TraceVerbose) Debug.WriteLine("Painting row " + RowNumber.ToString(CultureInfo.InvariantCulture) + " with bounds " + bounds.ToString());
             int bWidth = this.dgTable.BorderWidth;
 
@@ -537,7 +579,8 @@ namespace System.Windows.Forms {
             if (bWidth > 0)
                 PaintBottomBorder(g, dataBounds, dataWidth, bWidth, alignToRight);
 
-            if (expanded && this.dgTable.RelationsList.Count > 0) {
+            if (expanded && this.dgTable.RelationsList.Count > 0)
+            {
                 // paint the relationships
                 Rectangle relationBounds = new Rectangle(trueRowBounds.X,
                                                          dataBounds.Bottom,
@@ -554,7 +597,8 @@ namespace System.Windows.Forms {
         }
 
         protected override void PaintCellContents(Graphics g, Rectangle cellBounds, DataGridColumnStyle column,
-                                                  Brush backBr, Brush foreBrush, bool alignToRight) {
+                                                  Brush backBr, Brush foreBrush, bool alignToRight)
+        {
             CurrencyManager listManager = DataGrid.ListManager;
 
             // painting the error..
@@ -563,12 +607,14 @@ namespace System.Windows.Forms {
             Rectangle bounds = cellBounds;
             object errInfo = DataGrid.ListManager[this.number];
             if (errInfo is IDataErrorInfo)
-                errString = ((IDataErrorInfo) errInfo)[column.PropertyDescriptor.Name];
+                errString = ((IDataErrorInfo)errInfo)[column.PropertyDescriptor.Name];
 
-            if (!String.IsNullOrEmpty(errString)) {
+            if (!String.IsNullOrEmpty(errString))
+            {
                 Bitmap bmp = GetErrorBitmap();
                 Rectangle errRect;
-                lock (bmp) {
+                lock (bmp)
+                {
                     errRect = PaintIcon(g, bounds, true, alignToRight, bmp, backBr);
                 }
                 // paint the errors correctly when RTL = true
@@ -576,21 +622,23 @@ namespace System.Windows.Forms {
                     bounds.Width -= errRect.Width + xOffset;
                 else
                     bounds.X += errRect.Width + xOffset;
-                DataGrid.ToolTipProvider.AddToolTip(errString, (IntPtr)(DataGrid.ToolTipId ++), errRect);
+                DataGrid.ToolTipProvider.AddToolTip(errString, (IntPtr)(DataGrid.ToolTipId++), errRect);
             }
 
             column.Paint(g, bounds, listManager, this.RowNumber, backBr, foreBrush, alignToRight);
         }
 
-        public override void PaintHeader(Graphics g, Rectangle bounds, bool alignToRight, bool isDirty) {
+        public override void PaintHeader(Graphics g, Rectangle bounds, bool alignToRight, bool isDirty)
+        {
 
             DataGrid grid = this.DataGrid;
 
             Rectangle insideBounds = bounds;
 
-            if (!grid.FlatMode) {
+            if (!grid.FlatMode)
+            {
                 ControlPaint.DrawBorder3D(g, insideBounds, Border3DStyle.RaisedInner);
-                insideBounds.Inflate(-1,-1);
+                insideBounds.Inflate(-1, -1);
             }
 
             if (this.dgTable.IsDefault)
@@ -599,7 +647,8 @@ namespace System.Windows.Forms {
                 PaintHeaderInside(g, insideBounds, this.dgTable.HeaderBackBrush, alignToRight, isDirty);
         }
 
-        public void PaintHeaderInside(Graphics g, Rectangle bounds, Brush backBr, bool alignToRight, bool isDirty) {
+        public void PaintHeaderInside(Graphics g, Rectangle bounds, Brush backBr, bool alignToRight, bool isDirty)
+        {
             // paint the row header
             bool paintPlusMinus = dgTable.RelationsList.Count > 0 && dgTable.DataGrid.AllowNavigation;
             int rowHeaderBoundsX = MirrorRectangle(bounds.X,
@@ -624,18 +673,19 @@ namespace System.Windows.Forms {
                                                  bounds.Y,
                                                  expandoBoxWidth,
                                                  bounds.Height);
-            if (paintPlusMinus) {
+            if (paintPlusMinus)
+            {
                 PaintPlusMinusGlyph(g, expandoBox, backBr, alignToRight);
             }
 
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.PaintRelations"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Paints the relationships below the data area.
-        /// </devdoc>
+        /// </summary>
         private void PaintRelations(Graphics g, Rectangle bounds, Rectangle trueRowBounds,
-                                    int dataWidth, int firstCol, int nCols, bool alignToRight) {
+                                    int dataWidth, int firstCol, int nCols, bool alignToRight)
+        {
 
             // Calculate the relationship rect.
             // relationshipRect = Rectangle.Empty;
@@ -664,14 +714,16 @@ namespace System.Windows.Forms {
 
             int cy = PaintRelationText(g, relRect, alignToRight);
 
-            if (cy < relRect.Height) {
+            if (cy < relRect.Height)
+            {
                 g.FillRectangle(GetBackBrush(), relRect.X, relRect.Y + cy, relRect.Width, relRect.Height - cy);
             }
 
             g.Clip = r;
 
             // paint any exposed area to the right or to the left (BI-DI)
-            if (paintedWidth < bounds.Width) {
+            if (paintedWidth < bounds.Width)
+            {
                 int bWidth;
                 if (this.dgTable.IsDefault)
                     bWidth = this.DataGrid.GridLineWidth;
@@ -684,7 +736,8 @@ namespace System.Windows.Forms {
                                 bounds.Height);
 
                 // Paint the border to the right of each cell
-                if (bWidth > 0) {
+                if (bWidth > 0)
+                {
                     Brush br;
                     // if the user changed the gridLineColor on the dataGrid
                     // from the defaultValue, then use that value;
@@ -702,7 +755,8 @@ namespace System.Windows.Forms {
 
         }
 
-        private int PaintRelationText(Graphics g, Rectangle bounds, bool alignToRight) {
+        private int PaintRelationText(Graphics g, Rectangle bounds, bool alignToRight)
+        {
             g.FillRectangle(GetBackBrush(), bounds.X, bounds.Y, bounds.Width, System.Windows.Forms.DataGridTableStyle.relationshipSpacing);
 
             int relationshipHeight = this.dgTable.RelationshipHeight;
@@ -710,7 +764,8 @@ namespace System.Windows.Forms {
                                                  bounds.Width,
                                                  relationshipHeight);
             int cy = System.Windows.Forms.DataGridTableStyle.relationshipSpacing;
-            for (int r = 0; r < this.dgTable.RelationsList.Count; ++r) {
+            for (int r = 0; r < this.dgTable.RelationsList.Count; ++r)
+            {
                 if (cy > bounds.Height)
                     break;
 
@@ -719,17 +774,19 @@ namespace System.Windows.Forms {
                 Font textFont = this.DataGrid.Font;
                 textBrush = this.dgTable.IsDefault ? this.DataGrid.LinkBrush : this.dgTable.LinkBrush;
                 textFont = this.DataGrid.LinkFont;
-                
+
                 g.FillRectangle(GetBackBrush(), textBounds);
 
                 StringFormat format = new StringFormat();
-                if (alignToRight) {
+                if (alignToRight)
+                {
                     format.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
                     format.Alignment = StringAlignment.Far;
                 }
                 g.DrawString(((string)this.dgTable.RelationsList[r]), textFont, textBrush, textBounds,
                              format);
-                if (r == FocusedRelation && this.number == this.DataGrid.CurrentCell.RowNumber) {
+                if (r == FocusedRelation && this.number == this.DataGrid.CurrentCell.RowNumber)
+                {
                     textBounds.Width = this.dgTable.FocusedTextWidth;
                     ControlPaint.DrawFocusRectangle(g, textBounds, ((SolidBrush)textBrush).Color, ((SolidBrush)GetBackBrush()).Color);
                     textBounds.Width = bounds.Width;
@@ -742,9 +799,9 @@ namespace System.Windows.Forms {
             return cy;
         }
 
-        /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.PaintPlusMinusGlyph"]/*' />
         /// <internalonly/>
-        private void PaintPlusMinusGlyph(Graphics g, Rectangle bounds, Brush backBr, bool alignToRight) {
+        private void PaintPlusMinusGlyph(Graphics g, Rectangle bounds, Brush backBr, bool alignToRight)
+        {
             if (CompModSwitches.DGRelationShpRowPaint.TraceVerbose) Debug.WriteLine("PlusMinusGlyph painting in bounds    -> " + bounds.ToString());
             Rectangle outline = GetOutlineRect(bounds.X, bounds.Y);
 
@@ -763,19 +820,21 @@ namespace System.Windows.Forms {
             // draw the -
             g.DrawLine(drawPen,
                        outline.X + indent, outline.Y + outline.Width / 2,
-                       outline.Right - indent - 1, outline.Y + outline.Width/2);        // -1 on the y coordinate
+                       outline.Right - indent - 1, outline.Y + outline.Width / 2);        // -1 on the y coordinate
 
-            if (!expanded) {
+            if (!expanded)
+            {
                 // draw the vertical line to make +
                 g.DrawLine(drawPen,
-                           outline.X + outline.Height/2, outline.Y + indent,
-                           outline.X + outline.Height/2, outline.Bottom - indent - 1); // -1... hinting
+                           outline.X + outline.Height / 2, outline.Y + indent,
+                           outline.X + outline.Height / 2, outline.Bottom - indent - 1); // -1... hinting
             }
-            else {
+            else
+            {
                 Point[] points = new Point[3];
-                points[0] = new Point(outline.X + outline.Height/2, outline.Bottom);
+                points[0] = new Point(outline.X + outline.Height / 2, outline.Bottom);
 
-                points[1] = new Point(points[0].X, bounds.Y + 2*indent + base.Height);
+                points[1] = new Point(points[0].X, bounds.Y + 2 * indent + base.Height);
 
                 points[2] = new Point(alignToRight ? bounds.X : bounds.Right,
                                       points[1].Y);
@@ -783,12 +842,14 @@ namespace System.Windows.Forms {
             }
         }
 
-        private int RelationFromY(int y) {
+        private int RelationFromY(int y)
+        {
             int relation = -1;
             int relationshipHeight = this.dgTable.RelationshipHeight;
             Rectangle relRect = GetRelationshipRect();
             int cy = base.Height - this.dgTable.BorderWidth + System.Windows.Forms.DataGridTableStyle.relationshipSpacing;
-            while (cy < relRect.Bottom) {
+            while (cy < relRect.Bottom)
+            {
                 if (cy > y)
                     break;
                 cy += relationshipHeight;
@@ -801,52 +862,66 @@ namespace System.Windows.Forms {
 
         // given the relRect and the rowHeader, this function will return the 
         // X coordinate of the relationship rectangle as it should appear on the screen
-        private int MirrorRelationshipRectangle(Rectangle relRect, Rectangle rowHeader, bool alignToRight) {
+        private int MirrorRelationshipRectangle(Rectangle relRect, Rectangle rowHeader, bool alignToRight)
+        {
             if (alignToRight)
                 return rowHeader.X - relRect.Width;
             else
                 return relRect.X;
-           
+
         }
 
         // given the X and Width of a rectangle R1 contained in rect, 
         // this will return the X coordinate of the rectangle that corresponds to R1 in Bi-Di transformation
-        private int MirrorRectangle(int x, int width, Rectangle rect, bool alignToRight) {
+        private int MirrorRectangle(int x, int width, Rectangle rect, bool alignToRight)
+        {
             if (alignToRight)
                 return rect.Right + rect.X - width - x;
             else
                 return x;
         }
 
-        [ComVisible(true)]                                               
-        protected class DataGridRelationshipRowAccessibleObject : DataGridRowAccessibleObject {
-            public DataGridRelationshipRowAccessibleObject(DataGridRow owner) : base(owner) {
+        [ComVisible(true)]
+        protected class DataGridRelationshipRowAccessibleObject : DataGridRowAccessibleObject
+        {
+            public DataGridRelationshipRowAccessibleObject(DataGridRow owner) : base(owner)
+            {
             }
 
 
-            protected override void AddChildAccessibleObjects(IList children) {
+            protected override void AddChildAccessibleObjects(IList children)
+            {
                 base.AddChildAccessibleObjects(children);
                 DataGridRelationshipRow row = (DataGridRelationshipRow)Owner;
-                if (row.dgTable.RelationsList!= null) {
-                    for (int i=0; i<row.dgTable.RelationsList.Count; i++) {
+                if (row.dgTable.RelationsList != null)
+                {
+                    for (int i = 0; i < row.dgTable.RelationsList.Count; i++)
+                    {
                         children.Add(new DataGridRelationshipAccessibleObject(row, i));
                     }
                 }
             }
 
-            private DataGridRelationshipRow RelationshipRow {
-                get {
+            private DataGridRelationshipRow RelationshipRow
+            {
+                get
+                {
                     return (DataGridRelationshipRow)Owner;
                 }
             }
 
-            public override string DefaultAction {
-                get {
-                    if (RelationshipRow.dgTable.RelationsList.Count > 0) {
-                        if (RelationshipRow.Expanded) {
+            public override string DefaultAction
+            {
+                get
+                {
+                    if (RelationshipRow.dgTable.RelationsList.Count > 0)
+                    {
+                        if (RelationshipRow.Expanded)
+                        {
                             return SR.GetString(SR.AccDGCollapse);
                         }
-                        else {
+                        else
+                        {
                             return SR.GetString(SR.AccDGExpand);
                         }
                     }
@@ -854,14 +929,19 @@ namespace System.Windows.Forms {
                 }
             }
 
-            public override AccessibleStates State {
-                get {
+            public override AccessibleStates State
+            {
+                get
+                {
                     AccessibleStates state = base.State;
-                    if (RelationshipRow.dgTable.RelationsList.Count > 0) {
-                        if (((DataGridRelationshipRow)Owner).Expanded) {
+                    if (RelationshipRow.dgTable.RelationsList.Count > 0)
+                    {
+                        if (((DataGridRelationshipRow)Owner).Expanded)
+                        {
                             state |= AccessibleStates.Expanded;
                         }
-                        else {
+                        else
+                        {
                             state |= AccessibleStates.Collapsed;
                         }
                     }
@@ -870,37 +950,46 @@ namespace System.Windows.Forms {
             }
 
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public override void DoDefaultAction() {
-                if (RelationshipRow.dgTable.RelationsList.Count > 0) {
+            public override void DoDefaultAction()
+            {
+                if (RelationshipRow.dgTable.RelationsList.Count > 0)
+                {
                     ((DataGridRelationshipRow)Owner).Expanded = !((DataGridRelationshipRow)Owner).Expanded;
                 }
             }
 
-            public override AccessibleObject GetFocused() {
+            public override AccessibleObject GetFocused()
+            {
                 DataGridRelationshipRow row = (DataGridRelationshipRow)Owner;
                 int focusRel = row.dgTable.FocusedRelation;
-                if (focusRel == -1) {
+                if (focusRel == -1)
+                {
                     return base.GetFocused();
                 }
-                else {
+                else
+                {
                     return GetChild(GetChildCount() - row.dgTable.RelationsList.Count + focusRel);
                 }
             }
         }
 
         [ComVisible(true)]
-        protected class DataGridRelationshipAccessibleObject : AccessibleObject {
+        protected class DataGridRelationshipAccessibleObject : AccessibleObject
+        {
             DataGridRelationshipRow owner = null;
             int relationship;
 
-            public DataGridRelationshipAccessibleObject(DataGridRelationshipRow owner, int relationship) : base() {
+            public DataGridRelationshipAccessibleObject(DataGridRelationshipRow owner, int relationship) : base()
+            {
                 Debug.Assert(owner != null, "DataGridRelationshipAccessibleObject must have a valid owner DataGridRow");
                 this.owner = owner;
                 this.relationship = relationship;
             }
 
-            public override Rectangle Bounds {
-                get {
+            public override Rectangle Bounds
+            {
+                get
+                {
                     Rectangle rowBounds = DataGrid.GetRowBounds(owner);
 
                     Rectangle bounds = owner.Expanded ? owner.GetRelationshipRectWithMirroring() : Rectangle.Empty;
@@ -915,54 +1004,69 @@ namespace System.Windows.Forms {
                 }
             }
 
-            public override string Name {
-                get {
+            public override string Name
+            {
+                get
+                {
                     return (string)owner.dgTable.RelationsList[relationship];
                 }
             }
 
-            protected DataGridRelationshipRow Owner {
-                get {
+            protected DataGridRelationshipRow Owner
+            {
+                get
+                {
                     return owner;
                 }
             }
 
-            public override AccessibleObject Parent {
+            public override AccessibleObject Parent
+            {
                 [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-                get {
+                get
+                {
                     return owner.AccessibleObject;
                 }
             }
 
-            protected DataGrid DataGrid {
-                get {
+            protected DataGrid DataGrid
+            {
+                get
+                {
                     return owner.DataGrid;
                 }
             }
 
-            public override AccessibleRole Role {
-                get {
+            public override AccessibleRole Role
+            {
+                get
+                {
                     return AccessibleRole.Link;
                 }
             }
 
-            public override AccessibleStates State {
-                get {
+            public override AccessibleStates State
+            {
+                get
+                {
 
                     DataGridRow[] dgRows = this.DataGrid.DataGridRows;
-                    if (Array.IndexOf(dgRows, this.owner) == -1) {
+                    if (Array.IndexOf(dgRows, this.owner) == -1)
+                    {
                         return AccessibleStates.Unavailable;
                     }
 
-                    AccessibleStates state = AccessibleStates.Selectable 
-                        | AccessibleStates.Focusable 
+                    AccessibleStates state = AccessibleStates.Selectable
+                        | AccessibleStates.Focusable
                         | AccessibleStates.Linked;
 
-                    if (!owner.Expanded) {
+                    if (!owner.Expanded)
+                    {
                         state |= AccessibleStates.Invisible;
                     }
 
-                    if (DataGrid.Focused && Owner.dgTable.FocusedRelation == relationship) {
+                    if (DataGrid.Focused && Owner.dgTable.FocusedRelation == relationship)
+                    {
                         state |= AccessibleStates.Focused;
                     }
 
@@ -970,58 +1074,71 @@ namespace System.Windows.Forms {
                 }
             }
 
-            public override string Value {
-                get {
+            public override string Value
+            {
+                get
+                {
                     DataGridRow[] dgRows = this.DataGrid.DataGridRows;
-                    if (Array.IndexOf(dgRows, this.owner) == -1) {
+                    if (Array.IndexOf(dgRows, this.owner) == -1)
+                    {
                         return null;
-                    } else {
+                    }
+                    else
+                    {
                         return (string)owner.dgTable.RelationsList[relationship];
                     }
                 }
-                set {
+                set
+                {
                     // not supported
                 }
             }
 
-            public override string DefaultAction {
-                get {
+            public override string DefaultAction
+            {
+                get
+                {
                     return SR.GetString(SR.AccDGNavigate);
                 }
             }
 
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public override void DoDefaultAction() {
+            public override void DoDefaultAction()
+            {
                 ((DataGridRelationshipRow)Owner).Expanded = true;
                 owner.FocusedRelation = -1;
                 DataGrid.NavigateTo((string)owner.dgTable.RelationsList[relationship], owner, true);
                 DataGrid.BeginInvoke(new MethodInvoker(this.ResetAccessibilityLayer));
             }
 
-            private void ResetAccessibilityLayer() {
-                ((DataGrid.DataGridAccessibleObject) DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Reorder, 0);
-                ((DataGrid.DataGridAccessibleObject) DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Focus, DataGrid.CurrentCellAccIndex);
-                ((DataGrid.DataGridAccessibleObject) DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Selection, DataGrid.CurrentCellAccIndex);
+            private void ResetAccessibilityLayer()
+            {
+                ((DataGrid.DataGridAccessibleObject)DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Reorder, 0);
+                ((DataGrid.DataGridAccessibleObject)DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Focus, DataGrid.CurrentCellAccIndex);
+                ((DataGrid.DataGridAccessibleObject)DataGrid.AccessibilityObject).NotifyClients(AccessibleEvents.Selection, DataGrid.CurrentCellAccIndex);
             }
 
-            /// <include file='doc\DataGridRelationshipRow.uex' path='docs/doc[@for="DataGridRelationshipRow.DataGridRelationshipAccessibleObject.Navigate"]/*' />
-            /// <devdoc>
+            /// <summary>
             ///      Navigate to the next or previous grid entry.
-            /// </devdoc>
+            /// </summary>
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public override AccessibleObject Navigate(AccessibleNavigation navdir) {
-                switch (navdir) {
+            public override AccessibleObject Navigate(AccessibleNavigation navdir)
+            {
+                switch (navdir)
+                {
                     case AccessibleNavigation.Right:
                     case AccessibleNavigation.Next:
                     case AccessibleNavigation.Down:
-                        if (relationship + 1 < owner.dgTable.RelationsList.Count) {
+                        if (relationship + 1 < owner.dgTable.RelationsList.Count)
+                        {
                             return Parent.GetChild(Parent.GetChildCount() - owner.dgTable.RelationsList.Count + relationship + 1);
                         }
                         break;
                     case AccessibleNavigation.Up:
                     case AccessibleNavigation.Left:
                     case AccessibleNavigation.Previous:
-                        if (relationship > 0) {
+                        if (relationship > 0)
+                        {
                             return Parent.GetChild(Parent.GetChildCount() - owner.dgTable.RelationsList.Count + relationship - 1);
                         }
                         break;
@@ -1032,14 +1149,17 @@ namespace System.Windows.Forms {
             }
 
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public override void Select(AccessibleSelection flags) {
+            public override void Select(AccessibleSelection flags)
+            {
                 // Focus the PropertyGridView window
                 //
-                if ( (flags & AccessibleSelection.TakeFocus) == AccessibleSelection.TakeFocus) {
+                if ((flags & AccessibleSelection.TakeFocus) == AccessibleSelection.TakeFocus)
+                {
                     DataGrid.Focus();
                 }
 
-                if ( (flags & AccessibleSelection.TakeSelection) == AccessibleSelection.TakeSelection) {
+                if ((flags & AccessibleSelection.TakeSelection) == AccessibleSelection.TakeSelection)
+                {
                     Owner.FocusedRelation = relationship;
                 }
             }

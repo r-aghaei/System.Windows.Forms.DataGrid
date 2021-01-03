@@ -1,0 +1,3 @@
+Remove copyright
+Replace <summary> with <summary>
+Remove <include />

@@ -1,10 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="DataGridDefaultColumnWidthTypeConverter.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-namespace System.Windows.Forms {
+namespace System.Windows.Forms
+{
     using System.Runtime.Serialization.Formatters;
     using System.Runtime.Remoting;
     using System.Runtime.InteropServices;
@@ -14,15 +9,14 @@ namespace System.Windows.Forms {
     using Microsoft.Win32;
     using System.Globalization;
 
-    /// <include file='doc\DataGridDefaultColumnWidthTypeConverter.uex' path='docs/doc[@for="DataGridPreferredColumnWidthTypeConverter"]/*' />
-    /// <devdoc>
+    /// <summary>
     ///    <para>[To be supplied.]</para>
-    /// </devdoc>
-    public class DataGridPreferredColumnWidthTypeConverter : TypeConverter {
-        /// <include file='doc\DataGridDefaultColumnWidthTypeConverter.uex' path='docs/doc[@for="DataGridPreferredColumnWidthTypeConverter.CanConvertFrom"]/*' />
-        /// <devdoc>
+    /// </summary>
+    public class DataGridPreferredColumnWidthTypeConverter : TypeConverter
+    {
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string) || sourceType == typeof(int))
@@ -31,18 +25,17 @@ namespace System.Windows.Forms {
                 return false;
         }
 
-        /// <include file='doc\DataGridDefaultColumnWidthTypeConverter.uex' path='docs/doc[@for="DataGridPreferredColumnWidthTypeConverter.ConvertTo"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (destinationType == typeof(string))
             {
                 if (value.GetType() == typeof(int))
                 {
-                    int pulica = (int) value;
-                    if (pulica == - 1)
+                    int pulica = (int)value;
+                    if (pulica == -1)
                         return "AutoColumnResize (-1)";
                     else
                         return pulica.ToString(CultureInfo.CurrentCulture);
@@ -56,10 +49,9 @@ namespace System.Windows.Forms {
                 return base.ConvertTo(context, culture, value, destinationType);
         }
 
-        /// <include file='doc\DataGridDefaultColumnWidthTypeConverter.uex' path='docs/doc[@for="DataGridPreferredColumnWidthTypeConverter.ConvertFrom"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value.GetType() == typeof(string))

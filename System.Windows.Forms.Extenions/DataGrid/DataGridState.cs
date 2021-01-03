@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="DataGridState.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-
-namespace System.Windows.Forms {
+namespace System.Windows.Forms
+{
 
     using System.Diagnostics;
 
@@ -18,41 +12,46 @@ namespace System.Windows.Forms {
     using Microsoft.Win32;
     using System.Security.Permissions;
 
-    /// <include file='doc\DataGridState.uex' path='docs/doc[@for="DataGridState"]/*' />
-    /// <devdoc>
+    /// <summary>
     ///      Encapsulates the state of a DataGrid that changes when the
     ///      user navigates back and forth through ADO.NET data relations.
-    /// </devdoc>
-    internal sealed class DataGridState : ICloneable {
+    /// </summary>
+    internal sealed class DataGridState : ICloneable
+    {
         // fields
         //
         public object DataSource = null;
         public string DataMember = null;
         public CurrencyManager ListManager = null;
-        public DataGridRow[] DataGridRows    = new DataGridRow[0];
+        public DataGridRow[] DataGridRows = new DataGridRow[0];
         public DataGrid DataGrid;
         public int DataGridRowsLength = 0;
         public GridColumnStylesCollection GridColumnStyles = null;
 
-        public int           FirstVisibleRow = 0;
-        public int           FirstVisibleCol = 0;
+        public int FirstVisibleRow = 0;
+        public int FirstVisibleCol = 0;
 
-        public int           CurrentRow      = 0;
-        public int           CurrentCol      = 0;
+        public int CurrentRow = 0;
+        public int CurrentCol = 0;
 
-        public DataGridRow   LinkingRow      = null;
-        AccessibleObject         parentRowAccessibleObject;
+        public DataGridRow LinkingRow = null;
+        AccessibleObject parentRowAccessibleObject;
 
-        public DataGridState() {
+        public DataGridState()
+        {
         }
 
-        public DataGridState(DataGrid dataGrid) {
+        public DataGridState(DataGrid dataGrid)
+        {
             PushState(dataGrid);
         }
-        
-        internal AccessibleObject ParentRowAccessibleObject {
-            get {
-                if (parentRowAccessibleObject == null) {
+
+        internal AccessibleObject ParentRowAccessibleObject
+        {
+            get
+            {
+                if (parentRowAccessibleObject == null)
+                {
                     parentRowAccessibleObject = new DataGridStateParentRowAccessibleObject(this);
                 }
                 return parentRowAccessibleObject;
@@ -62,7 +61,8 @@ namespace System.Windows.Forms {
         // methods
         //
 
-        public object Clone() {
+        public object Clone()
+        {
             DataGridState dgs = new DataGridState();
             dgs.DataGridRows = DataGridRows;
             dgs.DataSource = DataSource;
@@ -77,12 +77,12 @@ namespace System.Windows.Forms {
             return dgs;
         }
 
-        /// <include file='doc\DataGridState.uex' path='docs/doc[@for="DataGridState.PushState"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Called by a DataGrid when it wishes to preserve its
         ///      transient state in the current DataGridState object.
-        /// </devdoc>
-        public void PushState(DataGrid dataGrid) {
+        /// </summary>
+        public void PushState(DataGrid dataGrid)
+        {
             this.DataSource = dataGrid.DataSource;
             this.DataMember = dataGrid.DataMember;
             this.DataGrid = dataGrid;
@@ -92,12 +92,13 @@ namespace System.Windows.Forms {
             this.FirstVisibleCol = dataGrid.firstVisibleCol;
             this.CurrentRow = dataGrid.currentRow;
             this.GridColumnStyles = new GridColumnStylesCollection(dataGrid.myGridTable);
-            
+
             this.GridColumnStyles.Clear();
-            foreach(DataGridColumnStyle style in dataGrid.myGridTable.GridColumnStyles) {
+            foreach (DataGridColumnStyle style in dataGrid.myGridTable.GridColumnStyles)
+            {
                 this.GridColumnStyles.Add(style);
             }
-            
+
             this.ListManager = dataGrid.ListManager;
             this.ListManager.ItemChanged += new ItemChangedEventHandler(DataSource_Changed);
             this.ListManager.MetaDataChanged += new EventHandler(DataSource_MetaDataChanged);
@@ -106,17 +107,18 @@ namespace System.Windows.Forms {
 
         // this is needed so that the parent rows will remove notification from the list
         // when the datagridstate is no longer needed;
-        public void RemoveChangeNotification() {
+        public void RemoveChangeNotification()
+        {
             this.ListManager.ItemChanged -= new ItemChangedEventHandler(DataSource_Changed);
             this.ListManager.MetaDataChanged -= new EventHandler(DataSource_MetaDataChanged);
         }
 
-        /// <include file='doc\DataGridState.uex' path='docs/doc[@for="DataGridState.PullState"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///      Called by a grid when it wishes to match its transient
         ///      state with the current DataGridState object.
-        /// </devdoc>
-        public void PullState(DataGrid dataGrid, bool createColumn) {
+        /// </summary>
+        public void PullState(DataGrid dataGrid, bool createColumn)
+        {
             // dataGrid.DataSource = DataSource;
             // dataGrid.DataMember = DataMember;
             dataGrid.Set_ListManager(DataSource, DataMember, true, createColumn);   // true for forcing new listManager,
@@ -133,8 +135,10 @@ namespace System.Windows.Forms {
             dataGrid.SetDataGridRows(DataGridRows, DataGridRowsLength);
         }
 
-        private void DataSource_Changed(object sender, ItemChangedEventArgs e) {
-            if (this.DataGrid != null && this.ListManager.Position == e.Index) {
+        private void DataSource_Changed(object sender, ItemChangedEventArgs e)
+        {
+            if (this.DataGrid != null && this.ListManager.Position == e.Index)
+            {
                 DataGrid.InvalidateParentRows();
                 return;
             }
@@ -143,23 +147,28 @@ namespace System.Windows.Forms {
                 DataGrid.ParentRowsDataChanged();
         }
 
-        private void DataSource_MetaDataChanged(object sender, EventArgs e) {
+        private void DataSource_MetaDataChanged(object sender, EventArgs e)
+        {
             if (this.DataGrid != null)
                 DataGrid.ParentRowsDataChanged();
         }
 
 
         [ComVisible(true)]
-        internal class DataGridStateParentRowAccessibleObject : AccessibleObject {
+        internal class DataGridStateParentRowAccessibleObject : AccessibleObject
+        {
             DataGridState owner = null;
 
-            public DataGridStateParentRowAccessibleObject(DataGridState owner) : base() {
+            public DataGridStateParentRowAccessibleObject(DataGridState owner) : base()
+            {
                 Debug.Assert(owner != null, "DataGridRowAccessibleObject must have a valid owner DataGridRow");
                 this.owner = owner;
             }
 
-            public override Rectangle Bounds {
-                get {
+            public override Rectangle Bounds
+            {
+                get
+                {
                     DataGridParentRows dataGridParentRows = ((DataGridParentRows.DataGridParentRowsAccessibleObject)this.Parent).Owner;
                     DataGrid g = owner.LinkingRow.DataGrid;
                     Rectangle r = dataGridParentRows.GetBoundsForDataGridStateAccesibility(owner);
@@ -168,28 +177,36 @@ namespace System.Windows.Forms {
                 }
             }
 
-            public override string Name {
-                get {
+            public override string Name
+            {
+                get
+                {
                     return SR.GetString(SR.AccDGParentRow);
                 }
             }
 
-            public override AccessibleObject Parent {
+            public override AccessibleObject Parent
+            {
                 [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-                get {
+                get
+                {
                     return owner.LinkingRow.DataGrid.ParentRowsAccessibleObject;
                 }
             }
 
-            public override AccessibleRole Role {
-                get {
+            public override AccessibleRole Role
+            {
+                get
+                {
                     return AccessibleRole.ListItem;
                 }
             }
 
-            public override string Value {
+            public override string Value
+            {
                 [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-                get {
+                get
+                {
                     StringBuilder sb = new StringBuilder();
 
                     CurrencyManager source = (CurrencyManager)owner.LinkingRow.DataGrid.BindingContext[owner.DataSource, owner.DataMember];
@@ -198,8 +215,10 @@ namespace System.Windows.Forms {
                     sb.Append(": ");
 
                     bool needComma = false;
-                    foreach (DataGridColumnStyle col in owner.GridColumnStyles) {
-                        if (needComma) {
+                    foreach (DataGridColumnStyle col in owner.GridColumnStyles)
+                    {
+                        if (needComma)
+                        {
                             sb.Append(", ");
                         }
 
@@ -215,15 +234,16 @@ namespace System.Windows.Forms {
                 }
             }
 
-            /// <include file='doc\DataGridState.uex' path='docs/doc[@for="DataGridState.DataGridStateParentRowAccessibleObject.Navigate"]/*' />
-            /// <devdoc>
+            /// <summary>
             ///      Navigate to the next or previous grid entry.
-            /// </devdoc>
+            /// </summary>
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public override AccessibleObject Navigate(AccessibleNavigation navdir) {
+            public override AccessibleObject Navigate(AccessibleNavigation navdir)
+            {
                 DataGridParentRows.DataGridParentRowsAccessibleObject parentAcc = (DataGridParentRows.DataGridParentRowsAccessibleObject)Parent;
 
-                switch (navdir) {
+                switch (navdir)
+                {
                     case AccessibleNavigation.Down:
                     case AccessibleNavigation.Right:
                     case AccessibleNavigation.Next:

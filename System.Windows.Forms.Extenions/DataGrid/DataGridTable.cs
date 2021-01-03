@@ -1,11 +1,5 @@
-
-// <copyright file="DataGridTable.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-
-namespace System.Windows.Forms {
+namespace System.Windows.Forms
+{
     using System.ComponentModel;
     using System.ComponentModel.Design;
     using System.Diagnostics;
@@ -20,57 +14,57 @@ namespace System.Windows.Forms {
 
     using Microsoft.Win32;
 
-    /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle"]/*' />
-    /// <devdoc>
+    /// <summary>
     /// <para>Represents the table drawn by the <see cref='System.Windows.Forms.DataGrid'/> control at run time.</para>
-    /// </devdoc>
+    /// </summary>
     [
     ToolboxItem(false),
     DesignTimeVisible(false),
     //DefaultProperty("GridTableName")
     ]
-    public class DataGridTableStyle : Component, IDataGridEditingService {
+    public class DataGridTableStyle : Component, IDataGridEditingService
+    {
 
         // internal for DataGridColumn accessibility...
         //
-        internal DataGrid                 dataGrid    = null;
+        internal DataGrid dataGrid = null;
 
         // relationship UI
-        private int         relationshipHeight = 0;
-        internal const int  relationshipSpacing = 1;
-        private Rectangle   relationshipRect = Rectangle.Empty;
-        private int         focusedRelation = -1;
-        private int         focusedTextWidth;
+        private int relationshipHeight = 0;
+        internal const int relationshipSpacing = 1;
+        private Rectangle relationshipRect = Rectangle.Empty;
+        private int focusedRelation = -1;
+        private int focusedTextWidth;
 
         // will contain a list of relationships that this table has
         private ArrayList relationsList = new ArrayList(2);
 
         // the name of the table
         private string mappingName = "";
-        private GridColumnStylesCollection    gridColumns = null;
-        private bool                     readOnly    = false;
-        private bool                     isDefaultTableStyle = false;
+        private GridColumnStylesCollection gridColumns = null;
+        private bool readOnly = false;
+        private bool isDefaultTableStyle = false;
 
-        private static readonly object EventAllowSorting               = new object();
-        private static readonly object EventGridLineColor              = new object();
-        private static readonly object EventGridLineStyle              = new object();
-        private static readonly object EventHeaderBackColor            = new object();
-        private static readonly object EventHeaderForeColor            = new object();
-        private static readonly object EventHeaderFont                 = new object();
-        private static readonly object EventLinkColor                  = new object();
-        private static readonly object EventLinkHoverColor             = new object();
-        private static readonly object EventPreferredColumnWidth       = new object();
-        private static readonly object EventPreferredRowHeight         = new object();
-        private static readonly object EventColumnHeadersVisible       = new object();
-        private static readonly object EventRowHeaderWidth             = new object();
-        private static readonly object EventSelectionBackColor         = new object();
-        private static readonly object EventSelectionForeColor         = new object();
-        private static readonly object EventMappingName                = new object();
-        private static readonly object EventAlternatingBackColor       = new object();
-        private static readonly object EventBackColor                  = new object();
-        private static readonly object EventForeColor                  = new object();
-        private static readonly object EventReadOnly                   = new object();
-        private static readonly object EventRowHeadersVisible          = new object();
+        private static readonly object EventAllowSorting = new object();
+        private static readonly object EventGridLineColor = new object();
+        private static readonly object EventGridLineStyle = new object();
+        private static readonly object EventHeaderBackColor = new object();
+        private static readonly object EventHeaderForeColor = new object();
+        private static readonly object EventHeaderFont = new object();
+        private static readonly object EventLinkColor = new object();
+        private static readonly object EventLinkHoverColor = new object();
+        private static readonly object EventPreferredColumnWidth = new object();
+        private static readonly object EventPreferredRowHeight = new object();
+        private static readonly object EventColumnHeadersVisible = new object();
+        private static readonly object EventRowHeaderWidth = new object();
+        private static readonly object EventSelectionBackColor = new object();
+        private static readonly object EventSelectionForeColor = new object();
+        private static readonly object EventMappingName = new object();
+        private static readonly object EventAlternatingBackColor = new object();
+        private static readonly object EventBackColor = new object();
+        private static readonly object EventForeColor = new object();
+        private static readonly object EventReadOnly = new object();
+        private static readonly object EventRowHeadersVisible = new object();
 
         // add a bunch of properties, taken from the dataGrid
         //
@@ -78,33 +72,33 @@ namespace System.Windows.Forms {
         // default values
         //
         private const bool defaultAllowSorting = true;
-        private const  DataGridLineStyle  defaultGridLineStyle    = DataGridLineStyle.Solid;
-        private const int       defaultPreferredColumnWidth = 75;
-        private const int       defaultRowHeaderWidth       = 35;
-        internal static readonly Font      defaultFont                 = Control.DefaultFont;
-        internal static readonly int       defaultFontHeight           = defaultFont.Height;
+        private const DataGridLineStyle defaultGridLineStyle = DataGridLineStyle.Solid;
+        private const int defaultPreferredColumnWidth = 75;
+        private const int defaultRowHeaderWidth = 35;
+        internal static readonly Font defaultFont = Control.DefaultFont;
+        internal static readonly int defaultFontHeight = defaultFont.Height;
 
 
         // the actual place holders for properties
         //
-        private bool              allowSorting = defaultAllowSorting;
-        private SolidBrush        alternatingBackBrush = DefaultAlternatingBackBrush;
-        private SolidBrush        backBrush = DefaultBackBrush;
-        private SolidBrush        foreBrush = DefaultForeBrush;
-        private SolidBrush        gridLineBrush        = DefaultGridLineBrush;
-        private DataGridLineStyle gridLineStyle    = defaultGridLineStyle;
-        internal SolidBrush       headerBackBrush   = DefaultHeaderBackBrush;
-        internal Font             headerFont        = null; // this is ambient property to Font value.
-        internal SolidBrush       headerForeBrush   = DefaultHeaderForeBrush;
-        internal Pen            headerForePen     = DefaultHeaderForePen;
-        private SolidBrush             linkBrush            = DefaultLinkBrush;
-        internal int            preferredColumnWidth = defaultPreferredColumnWidth;
-        private int               prefferedRowHeight   = defaultFontHeight + 3;
-        private SolidBrush        selectionBackBrush  = DefaultSelectionBackBrush;
-        private SolidBrush        selectionForeBrush    = DefaultSelectionForeBrush;
-        private int               rowHeaderWidth = defaultRowHeaderWidth;
-        private bool              rowHeadersVisible = true;
-        private bool              columnHeadersVisible = true;
+        private bool allowSorting = defaultAllowSorting;
+        private SolidBrush alternatingBackBrush = DefaultAlternatingBackBrush;
+        private SolidBrush backBrush = DefaultBackBrush;
+        private SolidBrush foreBrush = DefaultForeBrush;
+        private SolidBrush gridLineBrush = DefaultGridLineBrush;
+        private DataGridLineStyle gridLineStyle = defaultGridLineStyle;
+        internal SolidBrush headerBackBrush = DefaultHeaderBackBrush;
+        internal Font headerFont = null; // this is ambient property to Font value.
+        internal SolidBrush headerForeBrush = DefaultHeaderForeBrush;
+        internal Pen headerForePen = DefaultHeaderForePen;
+        private SolidBrush linkBrush = DefaultLinkBrush;
+        internal int preferredColumnWidth = defaultPreferredColumnWidth;
+        private int prefferedRowHeight = defaultFontHeight + 3;
+        private SolidBrush selectionBackBrush = DefaultSelectionBackBrush;
+        private SolidBrush selectionForeBrush = DefaultSelectionForeBrush;
+        private int rowHeaderWidth = defaultRowHeaderWidth;
+        private bool rowHeadersVisible = true;
+        private bool columnHeadersVisible = true;
 
         // the dataGrid would need to know when the ColumnHeaderVisible, RowHeadersVisible, RowHeaderWidth
         // and preferredColumnWidth, preferredRowHeight properties are changed in the current dataGridTableStyle
@@ -112,68 +106,79 @@ namespace System.Windows.Forms {
         // LinkColor, LinkHoverColor
         //
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.AllowSorting"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
         SRCategory(SR.CatBehavior),
         DefaultValue(defaultAllowSorting),
         SRDescription(SR.DataGridAllowSortingDescr)
         ]
-        public bool AllowSorting {
-            get {
+        public bool AllowSorting
+        {
+            get
+            {
                 return allowSorting;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "AllowSorting"));
                 }
 
-                if (allowSorting != value) {
+                if (allowSorting != value)
+                {
                     allowSorting = value;
                     OnAllowSortingChanged(EventArgs.Empty);
                 }
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.AllowSortingChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         /// <para>[To be  supplied]</para>
-        /// </devdoc>
-        public event EventHandler AllowSortingChanged {
-            add {
+        /// </summary>
+        public event EventHandler AllowSortingChanged
+        {
+            add
+            {
                 Events.AddHandler(EventAllowSorting, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventAllowSorting, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.AlternatingBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.DataGridAlternatingBackColorDescr)
         ]
-        public Color AlternatingBackColor {
-            get {
+        public Color AlternatingBackColor
+        {
+            get
+            {
                 return alternatingBackBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "AlternatingBackColor"));
                 }
 
                 if (System.Windows.Forms.DataGrid.IsTransparentColor(value))
                     throw new ArgumentException(SR.GetString(SR.DataGridTableStyleTransparentAlternatingBackColorNotAllowed));
-                if (value.IsEmpty) {
+                if (value.IsEmpty)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor,
                                                               "AlternatingBackColor"));
                 }
-                if (!alternatingBackBrush.Color.Equals(value)) {
+                if (!alternatingBackBrush.Color.Equals(value))
+                {
                     alternatingBackBrush = new SolidBrush(value);
                     InvalidateInside();
                     OnAlternatingBackColorChanged(EventArgs.Empty);
@@ -181,90 +186,101 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.AlternatingBackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler AlternatingBackColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler AlternatingBackColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventAlternatingBackColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventAlternatingBackColor, value);
             }
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetAlternatingBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetAlternatingBackColor() {
-            if (ShouldSerializeAlternatingBackColor()) {
+        /// </summary>
+        public void ResetAlternatingBackColor()
+        {
+            if (ShouldSerializeAlternatingBackColor())
+            {
                 AlternatingBackColor = DefaultAlternatingBackBrush.Color;
                 InvalidateInside();
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeAlternatingBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeAlternatingBackColor()
         {
             return !AlternatingBackBrush.Equals(DefaultAlternatingBackBrush);
         }
 
-        internal SolidBrush AlternatingBackBrush {
-            get {
+        internal SolidBrush AlternatingBackBrush
+        {
+            get
+            {
                 return alternatingBackBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected bool ShouldSerializeBackColor() {
+        /// </summary>
+        protected bool ShouldSerializeBackColor()
+        {
             return !System.Windows.Forms.DataGridTableStyle.DefaultBackBrush.Equals(this.backBrush);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected bool ShouldSerializeForeColor() {
+        /// </summary>
+        protected bool ShouldSerializeForeColor()
+        {
             return !System.Windows.Forms.DataGridTableStyle.DefaultForeBrush.Equals(this.foreBrush);
         }
 
-        internal SolidBrush BackBrush {
-            get {
+        internal SolidBrush BackBrush
+        {
+            get
+            {
                 return this.backBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.BackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.ControlBackColorDescr)
         ]
-        public Color BackColor {
-            get {
+        public Color BackColor
+        {
+            get
+            {
                 return this.backBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "BackColor"));
                 }
 
                 if (System.Windows.Forms.DataGrid.IsTransparentColor(value))
                     throw new ArgumentException(SR.GetString(SR.DataGridTableStyleTransparentBackColorNotAllowed));
-                if (value.IsEmpty) {
+                if (value.IsEmpty)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor,
                                                               "BackColor"));
                 }
-                if (!backBrush.Color.Equals(value)) {
+                if (!backBrush.Color.Equals(value))
+                {
                     this.backBrush = new SolidBrush(value);
                     InvalidateInside();
                     OnBackColorChanged(EventArgs.Empty);
@@ -272,31 +288,36 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.BackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler BackColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler BackColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventBackColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventBackColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetBackColor() {
-            if (!this.backBrush.Equals(DefaultBackBrush)) {
+        /// </summary>
+        public void ResetBackColor()
+        {
+            if (!this.backBrush.Equals(DefaultBackBrush))
+            {
                 this.BackColor = DefaultBackBrush.Color;
             }
         }
 
-        internal int BorderWidth {
-            get {
+        internal int BorderWidth
+        {
+            get
+            {
                 DataGrid dataGrid = this.DataGrid;
                 if (dataGrid == null)
                     return 0;
@@ -304,10 +325,13 @@ namespace System.Windows.Forms {
                 // then use the value of that property
                 DataGridLineStyle gridStyle;
                 int gridLineWidth;
-                if (this.IsDefault) {
+                if (this.IsDefault)
+                {
                     gridStyle = this.DataGrid.GridLineStyle;
                     gridLineWidth = this.DataGrid.GridLineWidth;
-                } else {
+                }
+                else
+                {
                     gridStyle = this.GridLineStyle;
                     gridLineWidth = this.GridLineWidth;
                 }
@@ -319,103 +343,137 @@ namespace System.Windows.Forms {
             }
         }
 
-        internal static SolidBrush DefaultAlternatingBackBrush {
-            get {
+        internal static SolidBrush DefaultAlternatingBackBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.Window;
             }
         }
-        internal static SolidBrush DefaultBackBrush {
-            get {
+        internal static SolidBrush DefaultBackBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.Window;
             }
         }
-        internal static SolidBrush DefaultForeBrush {
-            get {
+        internal static SolidBrush DefaultForeBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.WindowText;
             }
         }
-        private static SolidBrush DefaultGridLineBrush {
-            get {
+        private static SolidBrush DefaultGridLineBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.Control;
             }
         }
-        private static SolidBrush DefaultHeaderBackBrush {
-            get {
+        private static SolidBrush DefaultHeaderBackBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.Control;
             }
         }
-        private static SolidBrush DefaultHeaderForeBrush {
-            get {
+        private static SolidBrush DefaultHeaderForeBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.ControlText;
             }
         }
-        private static Pen DefaultHeaderForePen {
-            get {
+        private static Pen DefaultHeaderForePen
+        {
+            get
+            {
                 return new Pen(SystemColors.ControlText);
             }
         }
-        private static SolidBrush DefaultLinkBrush {
-            get {
+        private static SolidBrush DefaultLinkBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.HotTrack;
             }
         }
-        private static SolidBrush DefaultSelectionBackBrush {
-            get {
+        private static SolidBrush DefaultSelectionBackBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.ActiveCaption;
             }
         }
-        private static SolidBrush DefaultSelectionForeBrush {
-            get {
+        private static SolidBrush DefaultSelectionForeBrush
+        {
+            get
+            {
                 return (SolidBrush)SystemBrushes.ActiveCaptionText;
             }
         }
 
-        internal int FocusedRelation {
-            get {
+        internal int FocusedRelation
+        {
+            get
+            {
                 return focusedRelation;
             }
-            set {
-                if (focusedRelation != value) {
+            set
+            {
+                if (focusedRelation != value)
+                {
                     focusedRelation = value;
-                    if (focusedRelation == -1) {
+                    if (focusedRelation == -1)
+                    {
                         focusedTextWidth = 0;
-                    } else {
+                    }
+                    else
+                    {
                         Graphics g = DataGrid.CreateGraphicsInternal();
-                        focusedTextWidth = (int) Math.Ceiling(g.MeasureString(((string) RelationsList[focusedRelation]), DataGrid.LinkFont).Width);
+                        focusedTextWidth = (int)Math.Ceiling(g.MeasureString(((string)RelationsList[focusedRelation]), DataGrid.LinkFont).Width);
                         g.Dispose();
                     }
                 }
             }
         }
 
-        internal int FocusedTextWidth {
-            get {
+        internal int FocusedTextWidth
+        {
+            get
+            {
                 return this.focusedTextWidth;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.ControlForeColorDescr)
         ]
-        public Color ForeColor {
-            get {
+        public Color ForeColor
+        {
+            get
+            {
                 return this.foreBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "ForeColor"));
                 }
 
-                if (value.IsEmpty) {
+                if (value.IsEmpty)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor,
                                                               "BackColor"));
                 }
-                if (!foreBrush.Color.Equals(value)) {
+                if (!foreBrush.Color.Equals(value))
+                {
                     this.foreBrush = new SolidBrush(value);
                     InvalidateInside();
                     OnForeColorChanged(EventArgs.Empty);
@@ -423,53 +481,62 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ForeColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler ForeColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler ForeColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventForeColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventForeColor, value);
             }
         }
 
-        internal SolidBrush ForeBrush {
-            get {
+        internal SolidBrush ForeBrush
+        {
+            get
+            {
                 return this.foreBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetForeColor() {
-            if (!this.foreBrush.Equals(DefaultForeBrush)) {
+        /// </summary>
+        public void ResetForeColor()
+        {
+            if (!this.foreBrush.Equals(DefaultForeBrush))
+            {
                 this.ForeColor = DefaultForeBrush.Color;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.GridLineColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.DataGridGridLineColorDescr)
         ]
-        public Color GridLineColor {
-            get {
+        public Color GridLineColor
+        {
+            get
+            {
                 return gridLineBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "GridLineColor"));
                 }
 
-                if (gridLineBrush.Color != value) {
+                if (gridLineBrush.Color != value)
+                {
                     if (value.IsEmpty)
                         throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "GridLineColor"));
                     gridLineBrush = new SolidBrush(value);
@@ -480,74 +547,85 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.GridLineColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler GridLineColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler GridLineColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventGridLineColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventGridLineColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeGridLineColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeGridLineColor()
         {
             return !GridLineBrush.Equals(DefaultGridLineBrush);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetGridLineColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetGridLineColor() {
-            if (ShouldSerializeGridLineColor()) {
+        /// </summary>
+        public void ResetGridLineColor()
+        {
+            if (ShouldSerializeGridLineColor())
+            {
                 GridLineColor = DefaultGridLineBrush.Color;
             }
         }
 
-        internal SolidBrush GridLineBrush {
-            get {
+        internal SolidBrush GridLineBrush
+        {
+            get
+            {
                 return gridLineBrush;
             }
         }
 
-        internal int GridLineWidth {
-            get {
+        internal int GridLineWidth
+        {
+            get
+            {
                 Debug.Assert(this.GridLineStyle == DataGridLineStyle.Solid || this.GridLineStyle == DataGridLineStyle.None, "are there any other styles?");
                 return GridLineStyle == DataGridLineStyle.Solid ? 1 : 0;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.GridLineStyle"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatAppearance),
          DefaultValue(defaultGridLineStyle),
          SRDescription(SR.DataGridGridLineStyleDescr)
         ]
-        public DataGridLineStyle GridLineStyle {
-            get {
+        public DataGridLineStyle GridLineStyle
+        {
+            get
+            {
                 return gridLineStyle;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "GridLineStyle"));
                 }
-                
+
                 //valid values are 0x0 to 0x1. 
-                if (!ClientUtils.IsEnumValid(value, (int)value, (int)DataGridLineStyle.None, (int)DataGridLineStyle.Solid)) {
+                if (!ClientUtils.IsEnumValid(value, (int)value, (int)DataGridLineStyle.None, (int)DataGridLineStyle.Solid))
+                {
                     throw new InvalidEnumArgumentException("value", (int)value, typeof(DataGridLineStyle));
                 }
-                if (gridLineStyle != value) {
+                if (gridLineStyle != value)
+                {
                     gridLineStyle = value;
                     // Invalidate(layout.Data);
                     OnGridLineStyleChanged(EventArgs.Empty);
@@ -555,33 +633,38 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.GridLineStyleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler GridLineStyleChanged {
-            add {
+        /// </summary>
+        public event EventHandler GridLineStyleChanged
+        {
+            add
+            {
                 Events.AddHandler(EventGridLineStyle, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventGridLineStyle, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
-         SRDescription(SR.DataGridHeaderBackColorDescr)         
+         SRDescription(SR.DataGridHeaderBackColorDescr)
         ]
-        public Color HeaderBackColor {
-            get {
+        public Color HeaderBackColor
+        {
+            get
+            {
                 return headerBackBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "HeaderBackColor"));
                 }
 
@@ -589,7 +672,8 @@ namespace System.Windows.Forms {
                     throw new ArgumentException(SR.GetString(SR.DataGridTableStyleTransparentHeaderBackColorNotAllowed));
                 if (value.IsEmpty)
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "HeaderBackColor"));
-                if (!value.Equals(headerBackBrush.Color)) {
+                if (!value.Equals(headerBackBrush.Color))
+                {
                     headerBackBrush = new SolidBrush(value);
 
                     /*
@@ -604,64 +688,72 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderBackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler HeaderBackColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler HeaderBackColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventHeaderBackColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventHeaderBackColor, value);
             }
         }
 
-        internal SolidBrush HeaderBackBrush {
-            get {
+        internal SolidBrush HeaderBackBrush
+        {
+            get
+            {
                 return headerBackBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeHeaderBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeHeaderBackColor()
         {
             return !HeaderBackBrush.Equals(DefaultHeaderBackBrush);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetHeaderBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetHeaderBackColor() {
-            if(ShouldSerializeHeaderBackColor()) {
+        /// </summary>
+        public void ResetHeaderBackColor()
+        {
+            if (ShouldSerializeHeaderBackColor())
+            {
                 HeaderBackColor = DefaultHeaderBackBrush.Color;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderFont"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatAppearance),
          Localizable(true),
          AmbientValue(null),
          SRDescription(SR.DataGridHeaderFontDescr)
         ]
-        public Font HeaderFont {
-            get {
-                return(headerFont == null ? (this.DataGrid == null ? Control.DefaultFont : this.DataGrid.Font) : headerFont);
+        public Font HeaderFont
+        {
+            get
+            {
+                return (headerFont == null ? (this.DataGrid == null ? Control.DefaultFont : this.DataGrid.Font) : headerFont);
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "HeaderFont"));
                 }
 
-                if (value == null && headerFont != null || (value != null && !value.Equals(headerFont))) {
+                if (value == null && headerFont != null || (value != null && !value.Equals(headerFont)))
+                {
                     headerFont = value;
                     /*
                     RecalculateFonts();
@@ -673,33 +765,36 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderFontChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler HeaderFontChanged {
-            add {
+        /// </summary>
+        public event EventHandler HeaderFontChanged
+        {
+            add
+            {
                 Events.AddHandler(EventHeaderFont, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventHeaderFont, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeHeaderFont"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        private bool ShouldSerializeHeaderFont() {
-            return(headerFont != null);
+        /// </summary>
+        private bool ShouldSerializeHeaderFont()
+        {
+            return (headerFont != null);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetHeaderFont"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetHeaderFont() {
-            if (headerFont != null) {
+        /// </summary>
+        public void ResetHeaderFont()
+        {
+            if (headerFont != null)
+            {
                 headerFont = null;
                 /*
                 RecalculateFonts();
@@ -710,26 +805,30 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
-         SRDescription(SR.DataGridHeaderForeColorDescr)         
+         SRDescription(SR.DataGridHeaderForeColorDescr)
         ]
-        public Color HeaderForeColor {
-            get {
+        public Color HeaderForeColor
+        {
+            get
+            {
                 return headerForePen.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "HeaderForeColor"));
                 }
 
                 if (value.IsEmpty)
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "HeaderForeColor"));
-                if (!value.Equals(headerForePen.Color)) {
+                if (!value.Equals(headerForePen.Color))
+                {
                     headerForePen = new Pen(value);
                     headerForeBrush = new SolidBrush(value);
 
@@ -745,67 +844,77 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.HeaderForeColorChanged"]/*' />
-        public event EventHandler HeaderForeColorChanged {
-            add {
+        public event EventHandler HeaderForeColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventHeaderForeColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventHeaderForeColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeHeaderForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeHeaderForeColor()
         {
             return !HeaderForePen.Equals(DefaultHeaderForePen);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetHeaderForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetHeaderForeColor() {
-            if(ShouldSerializeHeaderForeColor()) {
+        /// </summary>
+        public void ResetHeaderForeColor()
+        {
+            if (ShouldSerializeHeaderForeColor())
+            {
                 HeaderForeColor = DefaultHeaderForeBrush.Color;
             }
         }
 
-        internal SolidBrush HeaderForeBrush {
-            get {
+        internal SolidBrush HeaderForeBrush
+        {
+            get
+            {
                 return this.headerForeBrush;
             }
         }
 
-        internal Pen HeaderForePen {
-            get {
+        internal Pen HeaderForePen
+        {
+            get
+            {
                 return headerForePen;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.LinkColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.DataGridLinkColorDescr)
         ]
-        public Color LinkColor {
-            get {
+        public Color LinkColor
+        {
+            get
+            {
                 return linkBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "LinkColor"));
                 }
 
                 if (value.IsEmpty)
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "LinkColor"));
-                if (!linkBrush.Color.Equals(value)) {
+                if (!linkBrush.Color.Equals(value))
+                {
                     linkBrush = new SolidBrush(value);
                     // Invalidate(layout.Data);
                     OnLinkColorChanged(EventArgs.Empty);
@@ -813,99 +922,110 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.LinkColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler LinkColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler LinkColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventLinkColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventLinkColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeLinkColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeLinkColor()
         {
             return !LinkBrush.Equals(DefaultLinkBrush);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetLinkColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetLinkColor() {
+        /// </summary>
+        public void ResetLinkColor()
+        {
             if (ShouldSerializeLinkColor())
                 LinkColor = DefaultLinkBrush.Color;
         }
 
-        internal Brush LinkBrush {
-            get {
+        internal Brush LinkBrush
+        {
+            get
+            {
                 return linkBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.LinkHoverColor"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRDescription(SR.DataGridLinkHoverColorDescr),
          SRCategory(SR.CatColors),
          Browsable(false),
          EditorBrowsable(EditorBrowsableState.Never)
         ]
-        public Color LinkHoverColor {
-            get {
+        public Color LinkHoverColor
+        {
+            get
+            {
                 return this.LinkColor;
             }
             [SuppressMessage("Microsoft.Performance", "CA1801:AvoidUnusedParameters")]
-            set {
+            set
+            {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.LinkHoverColorChanged"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler LinkHoverColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler LinkHoverColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventLinkHoverColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventLinkHoverColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeLinkHoverColor"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeLinkHoverColor()
         {
             return false;
             // return !LinkHoverBrush.Equals(defaultLinkHoverBrush);
         }
 
-        internal Rectangle RelationshipRect {
-            get {
-                if (this.relationshipRect.IsEmpty) {
+        internal Rectangle RelationshipRect
+        {
+            get
+            {
+                if (this.relationshipRect.IsEmpty)
+                {
                     ComputeRelationshipRect();
                 }
                 return this.relationshipRect;
             }
         }
 
-        private Rectangle ComputeRelationshipRect() {
-            if (relationshipRect.IsEmpty && DataGrid.AllowNavigation) {
+        private Rectangle ComputeRelationshipRect()
+        {
+            if (relationshipRect.IsEmpty && DataGrid.AllowNavigation)
+            {
                 Debug.WriteLineIf(CompModSwitches.DGRelationShpRowLayout.TraceVerbose, "GetRelationshipRect grinding away");
                 Graphics g = DataGrid.CreateGraphicsInternal();
                 relationshipRect = new Rectangle();
@@ -914,8 +1034,9 @@ namespace System.Windows.Forms {
 
                 // Determine the width of the widest relationship name
                 int longestRelationship = 0;
-                for (int r = 0; r < this.RelationsList.Count; ++r) {
-                    int rwidth = (int) Math.Ceiling(g.MeasureString(((string) this.RelationsList[r]), this.DataGrid.LinkFont).Width)
+                for (int r = 0; r < this.RelationsList.Count; ++r)
+                {
+                    int rwidth = (int)Math.Ceiling(g.MeasureString(((string)this.RelationsList[r]), this.DataGrid.LinkFont).Width)
 ;
                     if (rwidth > longestRelationship)
                         longestRelationship = rwidth;
@@ -933,32 +1054,34 @@ namespace System.Windows.Forms {
             return relationshipRect;
         }
 
-        internal void ResetRelationsUI() {
+        internal void ResetRelationsUI()
+        {
             this.relationshipRect = Rectangle.Empty;
             this.focusedRelation = -1;
             this.relationshipHeight = this.dataGrid.LinkFontHeight + relationshipSpacing;
         }
 
-        internal int RelationshipHeight {
-            get {
+        internal int RelationshipHeight
+        {
+            get
+            {
                 return this.relationshipHeight;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetLinkHoverColor"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetLinkHoverColor() { 
+        /// </summary>
+        public void ResetLinkHoverColor()
+        {
             /*if (ShouldSerializeLinkHoverColor())
                 LinkHoverColor = defaultLinkHoverBrush.Color;*/
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.PreferredColumnWidth"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          DefaultValue(defaultPreferredColumnWidth),
          SRCategory(SR.CatLayout),
@@ -966,18 +1089,23 @@ namespace System.Windows.Forms {
          SRDescription(SR.DataGridPreferredColumnWidthDescr),
          TypeConverter(typeof(DataGridPreferredColumnWidthTypeConverter))
         ]
-        public int PreferredColumnWidth {
-            get {
+        public int PreferredColumnWidth
+        {
+            get
+            {
                 return preferredColumnWidth;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "PreferredColumnWidth"));
                 }
 
                 if (value < 0)
                     throw new ArgumentException(SR.GetString(SR.DataGridColumnWidth), "PreferredColumnWidth");
-                if (preferredColumnWidth != value) {
+                if (preferredColumnWidth != value)
+                {
                     preferredColumnWidth = value;
 
                     /*
@@ -994,34 +1122,39 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.PreferredColumnWidthChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler PreferredColumnWidthChanged {
-            add {
+        /// </summary>
+        public event EventHandler PreferredColumnWidthChanged
+        {
+            add
+            {
                 Events.AddHandler(EventPreferredColumnWidth, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventPreferredColumnWidth, value);
             }
         }
-        
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.PreferredRowHeight"]/*' />
-        /// <devdoc>
+
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatLayout),
          Localizable(true),
          SRDescription(SR.DataGridPreferredRowHeightDescr)
         ]
-        public int PreferredRowHeight {
-            get {
+        public int PreferredRowHeight
+        {
+            get
+            {
                 return prefferedRowHeight;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "PrefferedRowHeight"));
                 }
 
@@ -1055,47 +1188,52 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.PreferredRowHeightChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler PreferredRowHeightChanged {
-            add {
+        /// </summary>
+        public event EventHandler PreferredRowHeightChanged
+        {
+            add
+            {
                 Events.AddHandler(EventPreferredRowHeight, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventPreferredRowHeight, value);
             }
         }
 
-	private void ResetPreferredRowHeight() {
-		PreferredRowHeight = defaultFontHeight + 3;
-	}
+        private void ResetPreferredRowHeight()
+        {
+            PreferredRowHeight = defaultFontHeight + 3;
+        }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializePreferredRowHeight"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected bool ShouldSerializePreferredRowHeight()
         {
             return prefferedRowHeight != defaultFontHeight + 3;
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ColumnHeadersVisible"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatDisplay),
          DefaultValue(true),
          SRDescription(SR.DataGridColumnHeadersVisibleDescr)
         ]
-        public bool ColumnHeadersVisible {
-            get {
+        public bool ColumnHeadersVisible
+        {
+            get
+            {
                 return columnHeadersVisible;
             }
-            set {
-                if (columnHeadersVisible != value) {
+            set
+            {
+                if (columnHeadersVisible != value)
+                {
                     columnHeadersVisible = value;
                     /*
                     PerformLayout();
@@ -1106,34 +1244,39 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ColumnHeadersVisibleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler ColumnHeadersVisibleChanged {
-            add {
+        /// </summary>
+        public event EventHandler ColumnHeadersVisibleChanged
+        {
+            add
+            {
                 Events.AddHandler(EventColumnHeadersVisible, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventColumnHeadersVisible, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.RowHeadersVisible"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatDisplay),
          DefaultValue(true),
          SRDescription(SR.DataGridRowHeadersVisibleDescr)
         ]
-        public bool RowHeadersVisible {
-            get {
+        public bool RowHeadersVisible
+        {
+            get
+            {
                 return rowHeadersVisible;
             }
-            set {
-                if (rowHeadersVisible != value) {
+            set
+            {
+                if (rowHeadersVisible != value)
+                {
                     rowHeadersVisible = value;
                     /*
                     PerformLayout();
@@ -1144,34 +1287,38 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.RowHeadersVisibleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler RowHeadersVisibleChanged {
-            add {
+        /// </summary>
+        public event EventHandler RowHeadersVisibleChanged
+        {
+            add
+            {
                 Events.AddHandler(EventRowHeadersVisible, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventRowHeadersVisible, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.RowHeaderWidth"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatLayout),
          DefaultValue(defaultRowHeaderWidth),
          Localizable(true),
          SRDescription(SR.DataGridRowHeaderWidthDescr)
         ]
-        public int RowHeaderWidth {
-            get {
+        public int RowHeaderWidth
+        {
+            get
+            {
                 return rowHeaderWidth;
             }
-            set {
+            set
+            {
                 if (this.DataGrid != null)
                     value = Math.Max(this.DataGrid.MinimumRowHeaderWidth(), value);
                 if (rowHeaderWidth != value)
@@ -1189,33 +1336,38 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.RowHeaderWidthChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler RowHeaderWidthChanged {
-            add {
+        /// </summary>
+        public event EventHandler RowHeaderWidthChanged
+        {
+            add
+            {
                 Events.AddHandler(EventRowHeaderWidth, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventRowHeaderWidth, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.SelectionBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          SRCategory(SR.CatColors),
          SRDescription(SR.DataGridSelectionBackColorDescr)
         ]
-        public Color SelectionBackColor {
-            get {
+        public Color SelectionBackColor
+        {
+            get
+            {
                 return selectionBackBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "SelectionBackColor"));
                 }
 
@@ -1223,7 +1375,8 @@ namespace System.Windows.Forms {
                     throw new ArgumentException(SR.GetString(SR.DataGridTableStyleTransparentSelectionBackColorNotAllowed));
                 if (value.IsEmpty)
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "SelectionBackColor"));
-                if (!value.Equals(selectionBackBrush.Color)) {
+                if (!value.Equals(selectionBackBrush.Color))
+                {
                     selectionBackBrush = new SolidBrush(value);
 
                     InvalidateInside();
@@ -1233,70 +1386,79 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.SelectionBackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler SelectionBackColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler SelectionBackColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventSelectionBackColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventSelectionBackColor, value);
             }
         }
 
-        internal SolidBrush SelectionBackBrush {
-            get {
+        internal SolidBrush SelectionBackBrush
+        {
+            get
+            {
                 return this.selectionBackBrush;
             }
         }
 
-        internal SolidBrush SelectionForeBrush {
-            get {
+        internal SolidBrush SelectionForeBrush
+        {
+            get
+            {
                 return this.selectionForeBrush;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeSelectionBackColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected bool ShouldSerializeSelectionBackColor()
         {
             return !DefaultSelectionBackBrush.Equals(selectionBackBrush);
         }
-        
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetSelectionBackColor"]/*' />
-        /// <devdoc>
+
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetSelectionBackColor() {
+        /// </summary>
+        public void ResetSelectionBackColor()
+        {
             if (ShouldSerializeSelectionBackColor())
                 SelectionBackColor = DefaultSelectionBackBrush.Color;
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.SelectionForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
          Description("The foreground color for the current data grid row"),
          SRCategory(SR.CatColors),
-         SRDescription(SR.DataGridSelectionForeColorDescr)        
+         SRDescription(SR.DataGridSelectionForeColorDescr)
         ]
-        public Color SelectionForeColor {
-            get {
+        public Color SelectionForeColor
+        {
+            get
+            {
                 return selectionForeBrush.Color;
             }
-            set {
-                if (this.isDefaultTableStyle) {
+            set
+            {
+                if (this.isDefaultTableStyle)
+                {
                     throw new ArgumentException(SR.GetString(SR.DataGridDefaultTableSet, "SelectionForeColor"));
                 }
 
                 if (value.IsEmpty)
                     throw new ArgumentException(SR.GetString(SR.DataGridEmptyColor, "SelectionForeColor"));
-                if (!value.Equals(selectionForeBrush.Color)) {
+                if (!value.Equals(selectionForeBrush.Color))
+                {
                     selectionForeBrush = new SolidBrush(value);
 
                     InvalidateInside();
@@ -1306,106 +1468,111 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.SelectionForeColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler SelectionForeColorChanged {
-            add {
+        /// </summary>
+        public event EventHandler SelectionForeColorChanged
+        {
+            add
+            {
                 Events.AddHandler(EventSelectionForeColor, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventSelectionForeColor, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ShouldSerializeSelectionForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         protected virtual bool ShouldSerializeSelectionForeColor()
         {
             return !SelectionForeBrush.Equals(DefaultSelectionForeBrush);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ResetSelectionForeColor"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public void ResetSelectionForeColor() {
+        /// </summary>
+        public void ResetSelectionForeColor()
+        {
             if (ShouldSerializeSelectionForeColor())
                 SelectionForeColor = DefaultSelectionForeBrush.Color;
         }
 
         // will need this function from the dataGrid
         //
-        private void InvalidateInside() {
+        private void InvalidateInside()
+        {
             if (this.DataGrid != null)
                 this.DataGrid.InvalidateInside();
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.DefaultTableStyle"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
+        /// </summary>
         [
             SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")   // This has already shipped so we can't change it.
         ]
         public static readonly DataGridTableStyle DefaultTableStyle = new DataGridTableStyle(true);
 
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.DataGridTableStyle"]/*' />
         /// <internalonly/>
-        /// <devdoc>
+        /// <summary>
         /// <para>Initializes a new instance of the <see cref='System.Windows.Forms.DataGridTableStyle'/> class.</para>
-        /// </devdoc>
-        public DataGridTableStyle(bool isDefaultTableStyle) {
+        /// </summary>
+        public DataGridTableStyle(bool isDefaultTableStyle)
+        {
             gridColumns = new GridColumnStylesCollection(this, isDefaultTableStyle);
             gridColumns.CollectionChanged += new CollectionChangeEventHandler(this.OnColumnCollectionChanged);
             this.isDefaultTableStyle = isDefaultTableStyle;
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.DataGridTableStyle1"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public DataGridTableStyle() : this(false) {
+        /// </summary>
+        public DataGridTableStyle() : this(false)
+        {
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.DataGridTableStyle2"]/*' />
-        /// <devdoc>
+        /// <summary>
         /// <para>Initializes a new instance of the <see cref='System.Windows.Forms.DataGridTableStyle'/> class with the specified
         /// <see cref='System.Windows.Forms.CurrencyManager'/>.</para>
-        /// </devdoc>
+        /// </summary>
         [
             SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")  // If the constructor does not set the GridColumnStyles
                                                                                                     // it would be a breaking change.
         ]
-        public DataGridTableStyle(CurrencyManager listManager) : this() {
+        public DataGridTableStyle(CurrencyManager listManager) : this()
+        {
             Debug.Assert(listManager != null, "the DataGridTabel cannot use a null listManager");
             this.mappingName = listManager.GetListName();
             // set up the Relations and the columns
             SetGridColumnStylesCollection(listManager);
         }
 
-        internal void SetRelationsList(CurrencyManager listManager) {
+        internal void SetRelationsList(CurrencyManager listManager)
+        {
             PropertyDescriptorCollection propCollection = listManager.GetItemProperties();
             Debug.Assert(!this.IsDefault, "the grid can set the relations only on a table that was manually added by the user");
             int propCount = propCollection.Count;
             if (relationsList.Count > 0)
                 relationsList.Clear();
-            for (int i = 0; i < propCount; i++) {
+            for (int i = 0; i < propCount; i++)
+            {
                 PropertyDescriptor prop = propCollection[i];
                 Debug.Assert(prop != null, "prop is null: how that happened?");
-                if (PropertyDescriptorIsARelation(prop)) {
+                if (PropertyDescriptorIsARelation(prop))
+                {
                     // relation
                     relationsList.Add(prop.Name);
                 }
             }
         }
 
-        internal void SetGridColumnStylesCollection(CurrencyManager listManager) {
+        internal void SetGridColumnStylesCollection(CurrencyManager listManager)
+        {
             // when we are setting the gridColumnStyles, do not handle any gridColumnCollectionChanged events
             gridColumns.CollectionChanged -= new CollectionChangeEventHandler(this.OnColumnCollectionChanged);
 
@@ -1417,13 +1584,15 @@ namespace System.Windows.Forms {
 
             Debug.Assert(propCollection != null, "propCollection is null: how that happened?");
             int propCount = propCollection.Count;
-            for (int i = 0; i < propCount; i++) {
+            for (int i = 0; i < propCount; i++)
+            {
                 PropertyDescriptor prop = propCollection[i];
                 Debug.Assert(prop != null, "prop is null: how that happened?");
                 // do not take into account the properties that are browsable.
                 if (!prop.IsBrowsable)
                     continue;
-                if (PropertyDescriptorIsARelation(prop)) {
+                if (PropertyDescriptorIsARelation(prop))
+                {
                     // relation
                     relationsList.Add(prop.Name);
                 }
@@ -1433,7 +1602,8 @@ namespace System.Windows.Forms {
                     DataGridColumnStyle col = this.CreateGridColumn(prop, this.isDefaultTableStyle);
                     if (this.isDefaultTableStyle)
                         gridColumns.AddDefaultColumn(col);
-                    else {
+                    else
+                    {
                         col.MappingName = prop.Name;
                         col.HeaderText = prop.Name;
                         gridColumns.Add(col);
@@ -1445,17 +1615,18 @@ namespace System.Windows.Forms {
             gridColumns.CollectionChanged += new CollectionChangeEventHandler(this.OnColumnCollectionChanged);
         }
 
-        private static bool PropertyDescriptorIsARelation(PropertyDescriptor prop) {
+        private static bool PropertyDescriptorIsARelation(PropertyDescriptor prop)
+        {
             return typeof(IList).IsAssignableFrom(prop.PropertyType) && !typeof(Array).IsAssignableFrom(prop.PropertyType);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.CreateGridColumn"]/*' />
-        internal protected virtual DataGridColumnStyle CreateGridColumn(PropertyDescriptor prop) {
+        internal protected virtual DataGridColumnStyle CreateGridColumn(PropertyDescriptor prop)
+        {
             return this.CreateGridColumn(prop, false);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.CreateGridColumn1"]/*' />
-        internal protected virtual DataGridColumnStyle CreateGridColumn(PropertyDescriptor prop, bool isDefault) {
+        internal protected virtual DataGridColumnStyle CreateGridColumn(PropertyDescriptor prop, bool isDefault)
+        {
             DataGridColumnStyle ret = null;
             Type dataType = prop.PropertyType;
 
@@ -1476,7 +1647,8 @@ namespace System.Windows.Forms {
                      dataType.Equals(typeof(Double)) ||
                      dataType.Equals(typeof(Single)) ||
                      dataType.Equals(typeof(Byte)) ||
-                     dataType.Equals(typeof(SByte))) {
+                     dataType.Equals(typeof(SByte)))
+            {
                 ret = new DataGridTextBoxColumn(prop, "G", isDefault);
             }
             else
@@ -1486,8 +1658,10 @@ namespace System.Windows.Forms {
             return ret;
         }
 
-        internal void ResetRelationsList() {
-            if (this.isDefaultTableStyle) {
+        internal void ResetRelationsList()
+        {
+            if (this.isDefaultTableStyle)
+            {
                 relationsList.Clear();
             }
         }
@@ -1496,16 +1670,18 @@ namespace System.Windows.Forms {
         // =        Properties
         // =------------------------------------------------------------------
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.MappingName"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>Gets the name of this grid table.</para>
-        /// </devdoc>
+        /// </summary>
         [Editor("System.Windows.Forms.Design.DataGridTableStyleMappingNameEditor, " + AssemblyRef.SystemDesign, typeof(System.Drawing.Design.UITypeEditor)), DefaultValue("")]
-        public string MappingName {
-            get {
+        public string MappingName
+        {
+            get
+            {
                 return mappingName;
             }
-            set {
+            set
+            {
                 if (value == null)
                     value = "";
                 if (value.Equals(mappingName))
@@ -1514,10 +1690,13 @@ namespace System.Windows.Forms {
                 mappingName = value;
 
                 // this could throw
-                try {
+                try
+                {
                     if (this.DataGrid != null)
                         this.DataGrid.TableStyles.CheckForMappingNameDuplicates(this);
-                } catch {
+                }
+                catch
+                {
                     this.mappingName = originalMappingName;
                     throw;
                 }
@@ -1525,57 +1704,61 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.MappingNameChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler MappingNameChanged {
-            add {
+        /// </summary>
+        public event EventHandler MappingNameChanged
+        {
+            add
+            {
                 Events.AddHandler(EventMappingName, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventMappingName, value);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.RelationsList"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>Gets the
         ///       list of relation objects for the grid table.</para>
-        /// </devdoc>
-        internal ArrayList RelationsList {
-            get {
+        /// </summary>
+        internal ArrayList RelationsList
+        {
+            get
+            {
                 return relationsList;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.GridColumnStyles"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>Gets the collection of columns drawn for this table.</para>
-        /// </devdoc>
+        /// </summary>
         [
         Localizable(true),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Content)
         ]
-        public virtual GridColumnStylesCollection GridColumnStyles {
-            get {
+        public virtual GridColumnStylesCollection GridColumnStyles
+        {
+            get
+            {
                 return gridColumns;
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.SetInternalDataGrid"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>
         ///       Gets or sets the <see cref='System.Windows.Forms.DataGrid'/>
         ///       control displaying the table.
         ///    </para>
-        /// </devdoc>
+        /// </summary>
 
         internal void SetInternalDataGrid(DataGrid dG, bool force)
         {
             if (dataGrid != null && dataGrid.Equals(dG) && !force)
                 return;
-            else {
+            else
+            {
                 dataGrid = dG;
                 if (dG != null && dG.Initializing)
                     return;
@@ -1585,47 +1768,54 @@ namespace System.Windows.Forms {
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.DataGrid"]/*' />
-        /// <devdoc>
+        /// <summary>
         /// <para>Gets or sets the <see cref='System.Windows.Forms.DataGrid'/> control for the drawn table.</para>
-        /// </devdoc>
+        /// </summary>
         [Browsable(false)]
-        public virtual DataGrid DataGrid {
-            get {
+        public virtual DataGrid DataGrid
+        {
+            get
+            {
                 return dataGrid;
             }
-            set {
+            set
+            {
                 SetInternalDataGrid(value, true);
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ReadOnly"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>Gets or sets a value indicating whether columns can be
         ///       edited.</para>
-        /// </devdoc>
+        /// </summary>
         [DefaultValue(false)]
-        public virtual bool ReadOnly {
-            get {
+        public virtual bool ReadOnly
+        {
+            get
+            {
                 return readOnly;
             }
-            set {
-                if (readOnly != value) {
+            set
+            {
+                if (readOnly != value)
+                {
                     readOnly = value;
                     OnReadOnlyChanged(EventArgs.Empty);
                 }
             }
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.ReadOnlyChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        public event EventHandler ReadOnlyChanged {
-            add {
+        /// </summary>
+        public event EventHandler ReadOnlyChanged
+        {
+            add
+            {
                 Events.AddHandler(EventReadOnly, value);
             }
-            remove {
+            remove
+            {
                 Events.RemoveHandler(EventReadOnly, value);
             }
         }
@@ -1634,11 +1824,11 @@ namespace System.Windows.Forms {
         // =        Methods
         // =------------------------------------------------------------------
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.BeginEdit"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>Requests an edit operation.</para>
-        /// </devdoc>
-        public bool BeginEdit(DataGridColumnStyle gridColumn, int rowNumber) {
+        /// </summary>
+        public bool BeginEdit(DataGridColumnStyle gridColumn, int rowNumber)
+        {
             DataGrid grid = this.DataGrid;
             if (grid == null)
                 return false;
@@ -1646,12 +1836,12 @@ namespace System.Windows.Forms {
                 return grid.BeginEdit(gridColumn, rowNumber);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.EndEdit"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para> Requests an end to an edit
         ///       operation.</para>
-        /// </devdoc>
-        public bool EndEdit(DataGridColumnStyle gridColumn, int rowNumber, bool shouldAbort) {
+        /// </summary>
+        public bool EndEdit(DataGridColumnStyle gridColumn, int rowNumber, bool shouldAbort)
+        {
             DataGrid grid = this.DataGrid;
             if (grid == null)
                 return false;
@@ -1659,239 +1849,250 @@ namespace System.Windows.Forms {
                 return grid.EndEdit(gridColumn, rowNumber, shouldAbort);
         }
 
-        internal void InvalidateColumn(DataGridColumnStyle column) {
+        internal void InvalidateColumn(DataGridColumnStyle column)
+        {
             int index = GridColumnStyles.IndexOf(column);
             if (index >= 0 && DataGrid != null)
                 DataGrid.InvalidateColumn(index);
         }
 
 
-        private void OnColumnCollectionChanged(object sender, CollectionChangeEventArgs e) {
+        private void OnColumnCollectionChanged(object sender, CollectionChangeEventArgs e)
+        {
             gridColumns.CollectionChanged -= new CollectionChangeEventHandler(this.OnColumnCollectionChanged);
 
-            try {
+            try
+            {
                 DataGrid grid = this.DataGrid;
                 DataGridColumnStyle col = e.Element as DataGridColumnStyle;
-                if (e.Action == CollectionChangeAction.Add) {
+                if (e.Action == CollectionChangeAction.Add)
+                {
                     if (col != null)
                         col.SetDataGridInternalInColumn(grid);
-                } else if (e.Action == CollectionChangeAction.Remove) {
+                }
+                else if (e.Action == CollectionChangeAction.Remove)
+                {
                     if (col != null)
                         col.SetDataGridInternalInColumn(null);
-                } else {
+                }
+                else
+                {
                     // refresh
                     Debug.Assert(e.Action == CollectionChangeAction.Refresh, "there are only Add, Remove and Refresh in the CollectionChangeAction");
                     // if we get a column in this collectionChangeEventArgs it means
                     // that the propertyDescriptor in that column changed.
                     if (e.Element != null)
-                        for (int i = 0; i < gridColumns.Count; i++ )
+                        for (int i = 0; i < gridColumns.Count; i++)
                             gridColumns[i].SetDataGridInternalInColumn(null);
                 }
 
                 if (grid != null)
                     grid.OnColumnCollectionChanged(this, e);
-            } finally {
+            }
+            finally
+            {
                 gridColumns.CollectionChanged += new CollectionChangeEventHandler(this.OnColumnCollectionChanged);
             }
         }
 
 #if false
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnColumnChanged"]/*' />
-        /// <devdoc>
+                /// <summary>
         ///      The DataColumnCollection class actually wires up this
         ///      event handler to the PropertyChanged events of
         ///      a DataGridTable's columns.
-        /// </devdoc>
+        /// </summary>
         internal void OnColumnChanged(object sender, PropertyChangedEvent event) {
             if (event.PropertyName.Equals("Visible"))
                 GenerateVisibleColumnsCache();
         }
 #endif
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnReadOnlyChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnReadOnlyChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnReadOnlyChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventReadOnly] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnMappingNameChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnMappingNameChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnMappingNameChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventMappingName] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnAlternatingBackColorChanged"]/*' />
-        protected virtual void OnAlternatingBackColorChanged(EventArgs e) {
+        protected virtual void OnAlternatingBackColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventAlternatingBackColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnForeColorChanged"]/*' />
-        protected virtual void OnForeColorChanged(EventArgs e) {
+        protected virtual void OnForeColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventBackColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnBackColorChanged"]/*' />
-        protected virtual void OnBackColorChanged(EventArgs e) {
+        protected virtual void OnBackColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventForeColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnAllowSortingChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnAllowSortingChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnAllowSortingChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventAllowSorting] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnGridLineColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnGridLineColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnGridLineColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventGridLineColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnGridLineStyleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnGridLineStyleChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnGridLineStyleChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventGridLineStyle] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnHeaderBackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnHeaderBackColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnHeaderBackColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventHeaderBackColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnHeaderFontChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnHeaderFontChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnHeaderFontChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventHeaderFont] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnHeaderForeColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnHeaderForeColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnHeaderForeColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventHeaderForeColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnLinkColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnLinkColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnLinkColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventLinkColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnLinkHoverColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnLinkHoverColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnLinkHoverColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventLinkHoverColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnPreferredRowHeightChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnPreferredRowHeightChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnPreferredRowHeightChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventPreferredRowHeight] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnPreferredColumnWidthChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnPreferredColumnWidthChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnPreferredColumnWidthChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventPreferredColumnWidth] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnColumnHeadersVisibleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnColumnHeadersVisibleChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnColumnHeadersVisibleChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventColumnHeadersVisible] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnRowHeadersVisibleChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnRowHeadersVisibleChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnRowHeadersVisibleChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventRowHeadersVisible] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnRowHeaderWidthChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnRowHeaderWidthChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnRowHeaderWidthChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventRowHeaderWidth] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnSelectionForeColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnSelectionForeColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnSelectionForeColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventSelectionForeColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.OnSelectionBackColorChanged"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected virtual void OnSelectionBackColorChanged(EventArgs e) {
+        /// </summary>
+        protected virtual void OnSelectionBackColorChanged(EventArgs e)
+        {
             EventHandler eh = Events[EventSelectionBackColor] as EventHandler;
             if (eh != null)
                 eh(this, e);
         }
 
-        /// <include file='doc\DataGridTable.uex' path='docs/doc[@for="DataGridTableStyle.Dispose"]/*' />
-        /// <devdoc>
+        /// <summary>
         ///    <para>[To be supplied.]</para>
-        /// </devdoc>
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
                 GridColumnStylesCollection cols = this.GridColumnStyles;
-                if (cols != null) {
+                if (cols != null)
+                {
                     for (int i = 0; i < cols.Count; i++)
                         cols[i].Dispose();
                 }
@@ -1899,8 +2100,10 @@ namespace System.Windows.Forms {
             base.Dispose(disposing);
         }
 
-        internal bool IsDefault {
-            get {
+        internal bool IsDefault
+        {
+            get
+            {
                 return this.isDefaultTableStyle;
             }
         }
