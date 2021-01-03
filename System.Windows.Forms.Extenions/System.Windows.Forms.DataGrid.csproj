@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataGrid\System.Windows.Forms.Design.DataGridColumnCollectionEditor.cs" />
+    <Compile Remove="DataGrid\System.Windows.Forms.Design.DataGridColumnStyleMappingNameEditor.cs" />
+    <Compile Remove="DataGrid\System.Windows.Forms.Design.DataGridTableStyleMappingNameEditor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="DataGrid.bmp" />
     <None Remove="DataGridCaption.backarrow.bmp" />
     <None Remove="DataGridCaption.backarrow_bidi.bmp" />

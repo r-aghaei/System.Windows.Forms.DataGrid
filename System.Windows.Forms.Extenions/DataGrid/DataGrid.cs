@@ -27,7 +27,7 @@ namespace System.Windows.Forms
     [
     ComVisible(true),
     ClassInterface(ClassInterfaceType.AutoDispatch),
-    Designer("System.Windows.Forms.Design.DataGridDesigner, " + AssemblyRef.SystemDesign),
+    Designer(typeof(DataGridDesigner)),
     DefaultProperty("DataSource"),
     DefaultEvent("Navigate"),
     ComplexBindingProperties("DataSource", "DataMember"),
@@ -1399,7 +1399,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///    <para>[To be supplied.]</para>
         /// </summary>
-        internal  bool ShouldSerializeForeColor()
+        internal bool ShouldSerializeForeColor()
         {
             return !DefaultForeBrush.Color.Equals(this.ForeColor);
         }
@@ -1408,7 +1408,7 @@ namespace System.Windows.Forms
         /// <para>Indicates whether the <see cref='System.Windows.Forms.DataGrid.BackColor'/> property should be 
         ///    persisted.</para>
         /// </summary>
-        internal  bool ShouldSerializeBackColor()
+        internal bool ShouldSerializeBackColor()
         {
             return !DefaultBackBrush.Color.Equals(this.BackColor);
         }

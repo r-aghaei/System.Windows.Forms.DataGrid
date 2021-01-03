@@ -11,7 +11,7 @@ namespace System.Windows.Forms
 {
     public partial class DataGrid
     {
-        public bool CaptureInternal
+        internal bool CaptureInternal
         {
             get
             {
@@ -22,21 +22,21 @@ namespace System.Windows.Forms
                 this.Capture = value;
             }
         }
-        public void BeginUpdateInternal()
+        internal void BeginUpdateInternal()
         {
             typeof(Control).GetMethod("BeginUpdateInternal", BindingFlags.NonPublic | BindingFlags.Instance)
                 .Invoke(this, null);
         }
-        public void EndUpdateInternal()
+        internal void EndUpdateInternal()
         {
             typeof(Control).GetMethod("EndUpdateInternal", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { }, null)
                 .Invoke(this, null);
         }
-        public Graphics CreateGraphicsInternal()
+        internal Graphics CreateGraphicsInternal()
         {
             return this.CreateGraphics();
         }
-        public Control ParentInternal
+        internal Control ParentInternal
         {
             get
             {
@@ -47,11 +47,11 @@ namespace System.Windows.Forms
                 this.Parent = value;
             }
         }
-        public bool FocusInternal()
+        internal bool FocusInternal()
         {
             return this.Focus();
         }
-        public IntPtr CreateHalftoneHBRUSH()
+        internal IntPtr CreateHalftoneHBRUSH()
         {
             short[] array = new short[8];
             for (int i = 0; i < 8; i++)
