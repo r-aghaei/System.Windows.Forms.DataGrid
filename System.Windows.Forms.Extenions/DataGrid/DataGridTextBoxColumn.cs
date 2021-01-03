@@ -18,7 +18,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// <para>Hosts a System.Windows.Forms.TextBox control in a cell of a System.Windows.Forms.DataGridColumnStyle for editing strings.</para>
     /// </summary>
-    public class DataGridTextBoxColumn : DataGridColumnStyle
+    public partial class DataGridTextBoxColumn : DataGridColumnStyle
     {
 
         // ui State

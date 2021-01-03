@@ -605,7 +605,7 @@ namespace System.Windows.Forms
             //
             string errString = String.Empty;
             Rectangle bounds = cellBounds;
-            object errInfo = DataGrid.ListManager[this.number];
+            object errInfo = DataGrid.ListManager.Items(this.number);
             if (errInfo is IDataErrorInfo)
                 errString = ((IDataErrorInfo)errInfo)[column.PropertyDescriptor.Name];
 

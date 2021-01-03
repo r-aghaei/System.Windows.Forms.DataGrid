@@ -945,7 +945,7 @@ namespace System.Windows.Forms
             {
                 throw new InvalidOperationException(SR.GetString(SR.DataGridColumnNoPropertyDescriptor));
             }
-            object value = PropertyDescriptor.GetValue(source[rowNum]);
+            object value = PropertyDescriptor.GetValue(source.Items(rowNum));
             return value;
         }
 
@@ -1198,9 +1198,9 @@ namespace System.Windows.Forms
 
             if (source.Position != rowNum)
                 throw new ArgumentException(SR.GetString(SR.DataGridColumnListManagerPosition), "rowNum");
-            if (source[rowNum] is IEditableObject)
-                ((IEditableObject)source[rowNum]).BeginEdit();
-            this.PropertyDescriptor.SetValue(source[rowNum], value);
+            if (source.Items(rowNum) is IEditableObject)
+                ((IEditableObject)source.Items(rowNum)).BeginEdit();
+            this.PropertyDescriptor.SetValue(source.Items(rowNum), value);
         }
 
         internal protected virtual void ColumnStartedEditing(Control editingControl)

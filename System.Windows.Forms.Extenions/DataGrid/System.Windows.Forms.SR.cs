@@ -4852,7 +4852,7 @@ internal sealed class SR
 
 	internal SR()
 	{
-		resources = new ResourceManager("System.Windows.Forms", GetType().Assembly);
+		resources = new ResourceManager("System.Windows.Forms.Resources", GetType().Assembly);
 	}
 
 	private static SR GetLoader()

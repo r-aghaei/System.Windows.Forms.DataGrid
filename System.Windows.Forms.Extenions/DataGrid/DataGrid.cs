@@ -32,7 +32,7 @@ namespace System.Windows.Forms
     DefaultEvent("Navigate"),
     ComplexBindingProperties("DataSource", "DataMember"),
     ]
-    public class DataGrid : Control, ISupportInitialize, IDataGridEditingService
+    public partial class DataGrid : Control, ISupportInitialize, IDataGridEditingService
     {
 #if DEBUG
         internal TraceSwitch DataGridAcc = new TraceSwitch("DataGridAcc", "Trace Windows Forms DataGrid Accessibility");
@@ -1399,7 +1399,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///    <para>[To be supplied.]</para>
         /// </summary>
-        internal override bool ShouldSerializeForeColor()
+        internal  bool ShouldSerializeForeColor()
         {
             return !DefaultForeBrush.Color.Equals(this.ForeColor);
         }
@@ -1408,7 +1408,7 @@ namespace System.Windows.Forms
         /// <para>Indicates whether the <see cref='System.Windows.Forms.DataGrid.BackColor'/> property should be 
         ///    persisted.</para>
         /// </summary>
-        internal override bool ShouldSerializeBackColor()
+        internal  bool ShouldSerializeBackColor()
         {
             return !DefaultBackBrush.Color.Equals(this.BackColor);
         }
@@ -1826,7 +1826,7 @@ namespace System.Windows.Forms
                 //
                 if (listManagerChanged || gridState[GRIDSTATE_metaDataChanged])
                 {
-                    if (this.Visible) BeginUpdateInternal();
+                    if (this.Visible) this.BeginUpdateInternal();
 
                     if (listManager != null)
                     {
@@ -1853,7 +1853,7 @@ namespace System.Windows.Forms
                     // when we create the rows we need to use the current dataGridTable
                     //
                     RecreateDataGridRows();
-                    if (this.Visible) EndUpdateInternal();
+                    if (this.Visible) this.EndUpdateInternal();
                     beginUpdateInternal = false;
 
                     ComputeMinimumRowHeaderWidth();
@@ -1880,7 +1880,7 @@ namespace System.Windows.Forms
             {
                 gridState[GRIDSTATE_inSetListManager] = false;
                 // start painting again
-                if (beginUpdateInternal && this.Visible) EndUpdateInternal();
+                if (beginUpdateInternal && this.Visible) this.EndUpdateInternal();
             }
         }
 
@@ -3605,7 +3605,7 @@ namespace System.Windows.Forms
                 return false;
             for (int i = 0; i < this.listManager.Count; i++)
             {
-                object errObj = this.listManager[i];
+                object errObj = this.listManager.Items(i);
                 if (errObj is IDataErrorInfo)
                 {
                     string errString = ((IDataErrorInfo)errObj).Error;
@@ -3693,7 +3693,7 @@ namespace System.Windows.Forms
             else
             {
                 // let's see how we are doing w/ the errors
-                object errObj = this.listManager[ea.Index];
+                object errObj = this.listManager.Items(ea.Index);
                 bool oldListHasErrors = ListHasErrors;
                 if (errObj is IDataErrorInfo)
                 {
@@ -4139,12 +4139,12 @@ namespace System.Windows.Forms
                     RTLAwareMessageBox.Show(null, SR.GetString(SR.DataGridExceptionInPaint), null,
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 0);
 
-                    if (this.Visible) BeginUpdateInternal();
+                    if (this.Visible) this.BeginUpdateInternal();
 
                     ResetParentRows();
 
                     Set_ListManager(null, String.Empty, true);
-                    if (this.Visible) EndUpdateInternal();
+                    if (this.Visible) this.EndUpdateInternal();
                 }
             base.OnBindingContextChanged(e);
         }
@@ -4894,7 +4894,7 @@ namespace System.Windows.Forms
                     RTLAwareMessageBox.Show(null, SR.GetString(SR.DataGridExceptionInPaint), null, MessageBoxButtons.OK,
                         MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 0);
 
-                    if (this.Visible) BeginUpdateInternal();
+                    if (this.Visible) this.BeginUpdateInternal();
 
                     ResetParentRows();
 
@@ -4903,7 +4903,7 @@ namespace System.Windows.Forms
                 finally
                 {
                     gridState[GRIDSTATE_exceptionInPaint] = false;
-                    if (this.Visible) EndUpdateInternal();
+                    if (this.Visible) this.EndUpdateInternal();
                 }
             }
         }
@@ -5242,7 +5242,7 @@ namespace System.Windows.Forms
                 return;
 
             int size;
-            Graphics g = CreateGraphicsInternal();
+            Graphics g = this.CreateGraphicsInternal();
             try
             {
                 DataGridColumnStyle column = myGridTable.GridColumnStyles[col];
@@ -5408,7 +5408,7 @@ namespace System.Windows.Forms
             }
 
             CaptureInternal = true;
-            Cursor.ClipInternal = RectangleToScreen(clip);
+            Cursor.Clip = RectangleToScreen(clip);//ORIGINAL Internal
             gridState[GRIDSTATE_trackColResize] = true;
             trackColAnchor = x;
             trackColumn = col;
@@ -5526,7 +5526,7 @@ namespace System.Windows.Forms
             }
             finally
             {
-                Cursor.ClipInternal = Rectangle.Empty;
+                Cursor.Clip = Rectangle.Empty;
                 CaptureInternal = false;
                 this.gridState[GRIDSTATE_layoutSuspended] = false;
             }
@@ -5585,7 +5585,7 @@ namespace System.Windows.Forms
             if (listManager == null)
                 return;
 
-            Graphics g = CreateGraphicsInternal();
+            Graphics g = this.CreateGraphicsInternal();
             try
             {
                 GridColumnStylesCollection columns = myGridTable.GridColumnStyles;
@@ -5641,7 +5641,7 @@ namespace System.Windows.Forms
             clip.Height = layout.Data.Y + layout.Data.Height - topEdge - 2;
 
             CaptureInternal = true;
-            Cursor.ClipInternal = RectangleToScreen(clip);
+            Cursor.Clip = RectangleToScreen(clip);
             gridState[GRIDSTATE_trackRowResize] = true;
             trackRowAnchor = y;
             trackRow = row;
@@ -5695,7 +5695,7 @@ namespace System.Windows.Forms
             }
             finally
             {
-                Cursor.ClipInternal = Rectangle.Empty;
+                Cursor.Clip = Rectangle.Empty;//ORIGINAL Internal
                 CaptureInternal = false;
             }
             // OnRowResize(EventArgs.Empty);
@@ -6371,7 +6371,7 @@ namespace System.Windows.Forms
                     cy += rowHeight;
                 }
 
-                using (Graphics graphics = CreateGraphicsInternal())
+                using (Graphics graphics = this.CreateGraphicsInternal())
                 {
                     IntPtr handle = region.GetHrgn(graphics);
                     if (handle != IntPtr.Zero)
@@ -6456,7 +6456,7 @@ namespace System.Windows.Forms
         {
             IntPtr parentHandle = Handle;
             IntPtr dc = UnsafeNativeMethods.GetDCEx(new HandleRef(this, parentHandle), NativeMethods.NullHandleRef, NativeMethods.DCX_CACHE | NativeMethods.DCX_LOCKWINDOWUPDATE);
-            IntPtr halftone = ControlPaint.CreateHalftoneHBRUSH();
+            IntPtr halftone = this.CreateHalftoneHBRUSH();//ORIGINAL ControlPaint.CreateHalftoneHBRUSH();
             IntPtr saveBrush = SafeNativeMethods.SelectObject(new HandleRef(this, dc), new HandleRef(null, halftone));
             SafeNativeMethods.PatBlt(new HandleRef(this, dc), r.X, r.Y, r.Width, r.Height, NativeMethods.PATINVERT);
             SafeNativeMethods.SelectObject(new HandleRef(this, dc), new HandleRef(null, saveBrush));
@@ -8322,7 +8322,7 @@ namespace System.Windows.Forms
 
             int currentRowsCount = this.listManager == null ? 0 : this.listManager.Count;
 
-            if (this.Visible) BeginUpdateInternal();
+            if (this.Visible) this.BeginUpdateInternal();
             try
             {
                 if (this.ListManager != null)
@@ -8353,7 +8353,7 @@ namespace System.Windows.Forms
                 //
                 RecreateDataGridRows();
                 gridState[GRIDSTATE_inDeleteRow] = false;
-                if (this.Visible) EndUpdateInternal();
+                if (this.Visible) this.EndUpdateInternal();
                 throw;
             }
             // keep the copy of the old rows in place
@@ -8369,7 +8369,7 @@ namespace System.Windows.Forms
             }
 
             gridState[GRIDSTATE_inDeleteRow] = false;
-            if (this.Visible) EndUpdateInternal();
+            if (this.Visible) this.EndUpdateInternal();
 
             if (this.listManager != null && currentRowsCount != this.listManager.Count + rowsDeleted)
             {
@@ -9099,7 +9099,7 @@ namespace System.Windows.Forms
                 gridState[GRIDSTATE_editControlChanging] = true;
                 try
                 {
-                    FocusInternal();
+                    this.FocusInternal();
                 }
                 finally
                 {
@@ -10476,11 +10476,11 @@ namespace System.Windows.Forms
                 }
                 else
                 {
-                    if (AllowAdd != listManager.AllowAdd && !gridReadOnly)
+                    if (AllowAdd != listManager.AllowAdd() && !gridReadOnly)
                         change = true;
-                    AllowAdd = listManager.AllowAdd && !gridReadOnly && bl != null && bl.SupportsChangeNotification;
-                    AllowEdit = listManager.AllowEdit && !gridReadOnly;
-                    AllowRemove = listManager.AllowRemove && !gridReadOnly && bl != null && bl.SupportsChangeNotification;     // bug 86061
+                    AllowAdd = listManager.AllowAdd() && !gridReadOnly && bl != null && bl.SupportsChangeNotification;
+                    AllowEdit = listManager.AllowEdit() && !gridReadOnly;
+                    AllowRemove = listManager.AllowRemove() && !gridReadOnly && bl != null && bl.SupportsChangeNotification;     // bug 86061
                 }
                 return change;
             }

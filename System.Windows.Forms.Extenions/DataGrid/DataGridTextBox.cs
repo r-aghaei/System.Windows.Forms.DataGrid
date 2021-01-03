@@ -20,7 +20,7 @@ namespace System.Windows.Forms
     DesignTimeVisible(false),
     DefaultProperty("GridEditName")
     ]
-    public class DataGridTextBox : TextBox
+    public partial class DataGridTextBox : TextBox
     {
 
         private bool isInEditOrNavigateMode = true;
@@ -91,7 +91,7 @@ namespace System.Windows.Forms
         ///    <para>[To be supplied.]</para>
         /// </summary>
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-        protected internal override bool ProcessKeyMessage(ref Message m)
+        protected override bool ProcessKeyMessage(ref Message m)
         {
             Keys key = (Keys)unchecked((int)(long)m.WParam);
             Keys modifierKeys = ModifierKeys;

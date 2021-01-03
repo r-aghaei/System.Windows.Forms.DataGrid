@@ -38,6 +38,7 @@ namespace System.Windows.Forms.Extenions
             this.ClientSize = new System.Drawing.Size(415, 269);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

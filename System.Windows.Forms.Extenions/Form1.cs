@@ -17,5 +17,20 @@ namespace System.Windows.Forms.Extenions
             InitializeComponent();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            var table = new DataTable();
+            table.Columns.Add("C1", typeof(int));
+            table.Columns.Add("C2", typeof(string));
+            table.Columns.Add("C3", typeof(bool));
+            table.Rows.Add(1, "One", true);
+            table.Rows.Add(2, "Two", false);
+
+            var grid = new DataGrid();
+            grid.Dock = DockStyle.Fill;
+            grid.DataSource = table;
+
+            this.Controls.Add(grid);
+        }
     }
 }

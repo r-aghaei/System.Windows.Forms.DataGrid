@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>System.Windows.Forms</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="DataGrid.bmp" />
+    <None Remove="DataGridCaption.backarrow.bmp" />
+    <None Remove="DataGridCaption.backarrow_bidi.bmp" />
+    <None Remove="DataGridCaption.Details.bmp" />
+    <None Remove="DataGridCaption.down.bmp" />
+    <None Remove="DataGridCaption.right.bmp" />
+    <None Remove="DataGridCaption.up.bmp" />
+    <None Remove="DataGridParentRows.LeftArrow.bmp" />
+    <None Remove="DataGridParentRows.RightArrow.bmp" />
+    <None Remove="DataGridRow.error.bmp" />
+    <None Remove="DataGridRow.left.bmp" />
+    <None Remove="DataGridRow.pencil.bmp" />
+    <None Remove="DataGridRow.right.bmp" />
+    <None Remove="DataGridRow.star.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DataGrid.bmp" />
+    <EmbeddedResource Include="DataGridCaption.backarrow.bmp" />
+    <EmbeddedResource Include="DataGridCaption.backarrow_bidi.bmp" />
+    <EmbeddedResource Include="DataGridCaption.Details.bmp" />
+    <EmbeddedResource Include="DataGridCaption.down.bmp" />
+    <EmbeddedResource Include="DataGridCaption.right.bmp" />
+    <EmbeddedResource Include="DataGridCaption.up.bmp" />
+    <EmbeddedResource Include="DataGridParentRows.LeftArrow.bmp" />
+    <EmbeddedResource Include="DataGridParentRows.RightArrow.bmp" />
+    <EmbeddedResource Include="DataGridRow.error.bmp" />
+    <EmbeddedResource Include="DataGridRow.left.bmp" />
+    <EmbeddedResource Include="DataGridRow.pencil.bmp" />
+    <EmbeddedResource Include="DataGridRow.right.bmp" />
+    <EmbeddedResource Include="DataGridRow.star.bmp" />
+  </ItemGroup>
+
+</Project>
