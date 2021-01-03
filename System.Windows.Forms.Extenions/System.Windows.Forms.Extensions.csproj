@@ -6,4 +6,52 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="DataGrid\DataGrid.cs" />
+    <Compile Remove="DataGrid\DataGridAddNewRow.cs" />
+    <Compile Remove="DataGrid\DataGridBoolColumn.cs" />
+    <Compile Remove="DataGrid\DataGridCaption.cs" />
+    <Compile Remove="DataGrid\DataGridCell.cs" />
+    <Compile Remove="DataGrid\DataGridColumn.cs" />
+    <Compile Remove="DataGrid\DataGridColumnCollection.cs" />
+    <Compile Remove="DataGrid\DataGridDefaultColumnWidthTypeConverter.cs" />
+    <Compile Remove="DataGrid\DataGridLineStyle.cs" />
+    <Compile Remove="DataGrid\DataGridParentRows.cs" />
+    <Compile Remove="DataGrid\DataGridParentRowsLabel.cs" />
+    <Compile Remove="DataGrid\DataGridRelationshipRow.cs" />
+    <Compile Remove="DataGrid\DataGridRow.cs" />
+    <Compile Remove="DataGrid\DataGridState.cs" />
+    <Compile Remove="DataGrid\DataGridTable.cs" />
+    <Compile Remove="DataGrid\DataGridTableCollection.cs" />
+    <Compile Remove="DataGrid\DataGridTablesFactory.cs" />
+    <Compile Remove="DataGrid\DataGridTextBox.cs" />
+    <Compile Remove="DataGrid\DataGridTextBoxColumn.cs" />
+    <Compile Remove="DataGrid\DataGridToolTip.cs" />
+    <Compile Remove="DataGrid\IDataGridEditingService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="DataGrid\DataGrid.cs" />
+    <None Include="DataGrid\DataGridAddNewRow.cs" />
+    <None Include="DataGrid\DataGridBoolColumn.cs" />
+    <None Include="DataGrid\DataGridCaption.cs" />
+    <None Include="DataGrid\DataGridCell.cs" />
+    <None Include="DataGrid\DataGridColumn.cs" />
+    <None Include="DataGrid\DataGridColumnCollection.cs" />
+    <None Include="DataGrid\DataGridDefaultColumnWidthTypeConverter.cs" />
+    <None Include="DataGrid\DataGridLineStyle.cs" />
+    <None Include="DataGrid\DataGridParentRows.cs" />
+    <None Include="DataGrid\DataGridParentRowsLabel.cs" />
+    <None Include="DataGrid\DataGridRelationshipRow.cs" />
+    <None Include="DataGrid\DataGridRow.cs" />
+    <None Include="DataGrid\DataGridState.cs" />
+    <None Include="DataGrid\DataGridTable.cs" />
+    <None Include="DataGrid\DataGridTableCollection.cs" />
+    <None Include="DataGrid\DataGridTablesFactory.cs" />
+    <None Include="DataGrid\DataGridTextBox.cs" />
+    <None Include="DataGrid\DataGridTextBoxColumn.cs" />
+    <None Include="DataGrid\DataGridToolTip.cs" />
+    <None Include="DataGrid\IDataGridEditingService.cs" />
+  </ItemGroup>
+
 </Project>
