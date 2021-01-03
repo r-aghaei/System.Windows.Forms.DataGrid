@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\System.Windows.Forms.Extenions\System.Windows.Forms.DataGrid.csproj" />
+    <ProjectReference Include="..\System.Windows.Forms.DataGrid\System.Windows.Forms.DataGrid.csproj" />
   </ItemGroup>
 
 </Project>

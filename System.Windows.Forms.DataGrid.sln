@@ -3,14 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Windows.Forms.DataGrid", "System.Windows.Forms.Extenions\System.Windows.Forms.DataGrid.csproj", "{479D84EC-FF43-4A8A-B8A2-3F379E3C5A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Windows.Forms.DataGrid", "System.Windows.Forms.DataGrid\System.Windows.Forms.DataGrid.csproj", "{479D84EC-FF43-4A8A-B8A2-3F379E3C5A84}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{147F0512-9DC1-4179-8DF0-2BCD733A887C}"
 	ProjectSection(SolutionItems) = preProject
-		Changes.txt = Changes.txt
+		dg1.png = dg1.png
+		dg2.png = dg2.png
+		dg3.png = dg3.png
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridExample", "DataGridExample\DataGridExample.csproj", "{F038DA4F-73BB-46C8-AF37-338EF42BAF87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGridExample", "DataGridExample\DataGridExample.csproj", "{F038DA4F-73BB-46C8-AF37-338EF42BAF87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
